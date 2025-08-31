@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Management Module</title>
+  <script>
+  // Check if user is logged in
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (!currentUser) {
+    // Not logged in → redirect to login page
+    window.location.href = "login.html";
+  }
+</script>
+
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AOS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* Prevent horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    /* Navbar Styling */
+    .navbar {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    .navbar a {
+      color: white !important;
+      font-weight: 500;
+    }
+    .navbar a:hover {
+      color: #ffcc00 !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 100vh; /* full screen */
+      background: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b') no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed; /* parallax effect on desktop */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+
+    /* Dark overlay */
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-top: 10px;
+    }
+
+    .btn-hero {
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: #ffcc00;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .btn-hero:hover {
+      background: #ffaa00;
+    }
+
+    /* Responsive Fixes */
+    @media (max-width: 768px) {
+      .hero {
+        background-attachment: scroll; /* disable parallax for mobile */
+        min-height: 80vh; /* smaller height for mobiles */
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+
+    /* Section Styling */
+    section {
+      padding: 60px 20px;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    /* Course Cards */
+    .course-card img {
+      height: 200px;
+      object-fit: cover;
+    }
+
+    /* Footer */
+    footer {
+      background: #222;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content text-center">
+      <h1 data-aos="fade-down" data-aos-duration="1200">
+        Welcome to Course Management
+      </h1>
+      <p data-aos="fade-up" data-aos-duration="1400" data-aos-delay="200">
+        Manage courses, lectures, and approvals with ease.
+      </p>
+      <a href="#courses" class="btn-hero" data-aos="zoom-in" data-aos-delay="400">
+        Explore Courses
+      </a>
+    </div>
+  </section>
+
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+</body>
+</html>
+
+
+ <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
+  <div class="container">
+    <a class="navbar-brand" href="#">LMS</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li><a href="home.html" class="nav-link text-white">Home</a></li>
+        <li><a href="course.html" class="nav-link text-white">Courses</a></li>
+        <li><a href="classes.html" class="nav-link text-white">Classes</a></li>
+        <li><a href="student.html" class="nav-link text-white">Payment & Subscription</a></li>
+        <li><a href="report.html" class="nav-link text-white">Reports</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Remove underline and add hover effect */
+  .navbar-nav .nav-link {
+    text-decoration: none !important;
+    transition: color 0.3s;
+  }
+  .navbar-nav .nav-link:hover {
+    color: #FFD700 !important; /* yellow */
+  }
+</style>
+
+<!-- Bootstrap 5 CSS & JS (make sure included) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  
+
+  <!-- Course Management Section -->
+<section id="manage">
+  <h2 class="section-title">Course Management Module</h2>
+  <div class="container">
+    <form class="row g-3" id="courseForm">
+      <div class="col-md-6">
+        <input type="text" class="form-control" id="courseTitle" placeholder="Course Title" required>
+      </div>
+      <div class="col-md-6">
+        <!-- Category Dropdown -->
+        <select class="form-control" id="courseCategory" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Programming">Programming</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Data Science">Data Science</option>
+          <option value="AI & ML">AI & ML</option>
+          <option value="Business">Business</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <textarea class="form-control" id="courseDescription" rows="3" placeholder="Course Description" required></textarea>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="col-md-6">
+        <input type="file" class="form-control" id="courseFile" accept=".pdf,.doc,.docx,.mp4,.pptx">
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" id="youtubeLink" placeholder="YouTube Link (optional)">
+      </div>
+
+      <div class="col-12 text-center">
+        <button type="button" class="btn btn-success" onclick="createCourse()">Create Course</button>
+        <button type="button" class="btn btn-warning" onclick="updateCourse()">Update Course</button>
+        <button type="button" class="btn btn-danger" onclick="deleteCourse()">Delete Course</button>
+      </div>
+    </form>
+
+    <!-- Table to show courses -->
+    <div class="mt-4">
+      <h4 class="text-center">Courses Added to get Admin Approval</h4>
+      <table class="table table-bordered text-center" id="courseTable">
+        <thead class="table-dark">
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Published Courses -->
+    <div class="mt-5">
+      <h4 class="text-center text-success">Published Courses</h4>
+      <div id="publishedCourses"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let courses = [];
+  let selectedIndex = -1;
+
+  function createCourse() {
+    const title = document.getElementById("courseTitle").value;
+    const category = document.getElementById("courseCategory").value;
+    const description = document.getElementById("courseDescription").value;
+    const fileInput = document.getElementById("courseFile");
+    const youtubeLink = document.getElementById("youtubeLink").value;
+
+    if (!title || !category || !description) {
+      alert("Please fill in all fields!");
+      return;
+    }
+
+    let fileURL = "";
+    if (fileInput.files.length > 0) {
+      fileURL = URL.createObjectURL(fileInput.files[0]);
+    }
+
+    courses.push({
+      title,
+      category,
+      description,
+      fileURL,
+      youtubeLink,
+      status: "Pending Approval"
+    });
+
+    renderCourses();
+    document.getElementById("courseForm").reset();
+  }
+
+  function renderCourses() {
+    const tableBody = document.querySelector("#courseTable tbody");
+    tableBody.innerHTML = "";
+
+    courses.forEach((course, index) => {
+      tableBody.innerHTML += `
+        <tr>
+          <td>${course.title}</td>
+          <td>${course.category}</td>
+          <td>${course.description}</td>
+          <td>${course.status}</td>
+          <td>
+            <button class="btn btn-info btn-sm" onclick="selectCourse(${index})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCourse(${index})">Delete</button>
+            <button class="btn btn-success btn-sm" onclick="approveCourse(${index})">Approve</button>
+            <button class="btn btn-secondary btn-sm" onclick="rejectCourse(${index})">Reject</button>
+          </td>
+        </tr>`;
+    });
+
+    renderPublishedCourses();
+  }
+
+  function renderPublishedCourses() {
+    const publishedDiv = document.getElementById("publishedCourses");
+    publishedDiv.innerHTML = "";
+
+    courses.forEach(course => {
+      if (course.status === "Published") {
+        let content = "";
+        if (course.youtubeLink) {
+          content += `<p><strong>YouTube Video:</strong></p>
+                      <iframe width="400" height="250" src="${course.youtubeLink.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>`;
+        }
+        if (course.fileURL) {
+          if (course.fileURL.endsWith(".pdf")) {
+            content += `<p><a href="${course.fileURL}" target="_blank">View PDF</a></p>`;
+          } else if (course.fileURL.endsWith(".mp4")) {
+            content += `<video width="400" controls><source src="${course.fileURL}" type="video/mp4"></video>`;
+          } else {
+            content += `<p><a href="${course.fileURL}" download>Download File</a></p>`;
+          }
+        }
+
+        publishedDiv.innerHTML += `
+          <div class="card mt-3 p-3">
+            <h5>${course.title}</h5>
+            <p><strong>Category:</strong> ${course.category}</p>
+            <p>${course.description}</p>
+            ${content}
+          </div>`;
+      }
+    });
+  }
+
+  function selectCourse(index) {
+    selectedIndex = index;
+    const course = courses[index];
+    document.getElementById("courseTitle").value = course.title;
+    document.getElementById("courseCategory").value = course.category;
+    document.getElementById("courseDescription").value = course.description;
+  }
+
+  function updateCourse() {
+    if (selectedIndex < 0) {
+      alert("Please select a course to update!");
+      return;
+    }
+    courses[selectedIndex].title = document.getElementById("courseTitle").value;
+    courses[selectedIndex].category = document.getElementById("courseCategory").value;
+    courses[selectedIndex].description = document.getElementById("courseDescription").value;
+    renderCourses();
+    document.getElementById("courseForm").reset();
+    selectedIndex = -1;
+  }
+
+  function deleteCourse(index) {
+    courses.splice(index, 1);
+    renderCourses();
+    document.getElementById("courseForm").reset();
+    selectedIndex = -1;
+  }
+
+  function approveCourse(index) {
+    courses[index].status = "Published";
+    renderCourses();
+  }
+
+  function rejectCourse(index) {
+    courses[index].status = "Rejected";
+    renderCourses();
+  }
+</script>
+
+
+  <!-- Lectures Section -->
+<section id="lectures" style="background:#f1f1f1; padding:40px 0;">
+  <h2 class="section-title text-center">Add Lectures</h2>
+  <div class="container text-center">
+    <!-- Hidden file inputs -->
+    <input type="file" id="videoInput" accept="video/*" style="display:none">
+    <input type="file" id="pdfInput" accept="application/pdf" style="display:none">
+    <input type="file" id="quizInput" accept=".json,.txt" style="display:none">
+    <input type="file" id="assignmentInput" accept=".pdf,.doc,.docx" style="display:none">
+
+    <!-- Action buttons -->
+    <button class="btn btn-primary m-2" onclick="document.getElementById('videoInput').click()">Upload Video</button>
+    <button class="btn btn-secondary m-2" onclick="document.getElementById('pdfInput').click()">Upload PDF</button>
+    <button class="btn btn-info m-2" onclick="document.getElementById('quizInput').click()">Add Quiz</button>
+    <button class="btn btn-dark m-2" onclick="document.getElementById('assignmentInput').click()">Add Assignment</button>
+
+    <!-- Uploaded files preview -->
+    <div id="lectureList" class="mt-4 text-start"></div>
+  </div>
+</section>
+
+<script>
+  const videoInput = document.getElementById("videoInput");
+  const pdfInput = document.getElementById("pdfInput");
+  const quizInput = document.getElementById("quizInput");
+  const assignmentInput = document.getElementById("assignmentInput");
+  const lectureList = document.getElementById("lectureList");
+
+  // Function to show uploaded file
+  function displayFile(file, type) {
+    let item = document.createElement("div");
+    item.classList.add("p-3", "border", "rounded", "mb-3", "bg-white", "shadow-sm");
+
+    let content = "";
+
+    if (type === "video") {
+      content = `<strong>Video:</strong> ${file.name}<br>
+        <video controls width="300" class="mt-2">
+          <source src="${URL.createObjectURL(file)}" type="${file.type}">
+          Your browser does not support video.
+        </video>`;
+    } else if (type === "pdf") {
+      content = `<strong>PDF:</strong> ${file.name}<br>
+        <a href="${URL.createObjectURL(file)}" target="_blank" class="btn btn-sm btn-outline-secondary mt-2">View PDF</a>`;
+    } else if (type === "quiz") {
+      content = `<strong>Quiz File:</strong> ${file.name}`;
+    } else if (type === "assignment") {
+      content = `<strong>Assignment:</strong> ${file.name}`;
+    }
+
+    // Add Edit + Delete buttons
+    item.innerHTML = `
+      <div>${content}</div>
+      <div class="mt-2">
+        <button class="btn btn-warning btn-sm me-2">Edit</button>
+        <button class="btn btn-danger btn-sm">Delete</button>
+      </div>
+    `;
+
+    // Handle delete
+    item.querySelector(".btn-danger").addEventListener("click", () => {
+      lectureList.removeChild(item);
+    });
+
+    // Handle edit
+    item.querySelector(".btn-warning").addEventListener("click", () => {
+      let input;
+      if (type === "video") input = videoInput;
+      else if (type === "pdf") input = pdfInput;
+      else if (type === "quiz") input = quizInput;
+      else if (type === "assignment") input = assignmentInput;
+
+      input.click();
+
+      input.onchange = (e) => {
+        if (e.target.files.length > 0) {
+          lectureList.removeChild(item);
+          displayFile(e.target.files[0], type);
+        }
+      };
+    });
+
+    lectureList.appendChild(item);
+  }
+
+  // Event listeners for inputs
+  videoInput.addEventListener("change", (e) => {
+    if (e.target.files.length > 0) displayFile(e.target.files[0], "video");
+  });
+  pdfInput.addEventListener("change", (e) => {
+    if (e.target.files.length > 0) displayFile(e.target.files[0], "pdf");
+  });
+  quizInput.addEventListener("change", (e) => {
+    if (e.target.files.length > 0) displayFile(e.target.files[0], "quiz");
+  });
+  assignmentInput.addEventListener("change", (e) => {
+    if (e.target.files.length > 0) displayFile(e.target.files[0], "assignment");
+  });
+</script>
+
+
+  <!-- Categories & Tags -->
+<section id="categories" style="background:#f9f9f9;">
+  <h2 class="section-title text-center">Categories & Tags</h2>
+  <div class="container">
+    <form id="categoryForm" class="mb-4">
+      <div class="mb-3">
+        <input type="text" id="categoryInput" class="form-control" placeholder="Add Category">
+      </div>
+      <div class="mb-3">
+        <input type="text" id="tagsInput" class="form-control" placeholder="Add Tags (comma separated)">
+      </div>
+      <button type="submit" class="btn btn-success w-100">Save</button>
+    </form>
+
+    <!-- Table to display categories & tags -->
+    <table class="table table-bordered table-striped text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Category</th>
+          <th>Tags</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="categoryTableBody">
+        <!-- Dynamic rows appear here -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("categoryForm");
+  const categoryInput = document.getElementById("categoryInput");
+  const tagsInput = document.getElementById("tagsInput");
+  const tableBody = document.getElementById("categoryTableBody");
+
+  let editIndex = null; // For editing rows
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const category = categoryInput.value.trim();
+    const tags = tagsInput.value.trim();
+
+    if (category === "" && tags === "") {
+      alert("Please enter a category or tags!");
+      return;
+    }
+
+    if (editIndex === null) {
+      // Add new row
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${category}</td>
+        <td>${tags}</td>
+        <td>
+          <button class="btn btn-warning btn-sm edit">Edit</button>
+          <button class="btn btn-danger btn-sm delete">Delete</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    } else {
+      // Update existing row
+      const row = tableBody.rows[editIndex];
+      row.cells[0].innerText = category;
+      row.cells[1].innerText = tags;
+      editIndex = null;
+    }
+
+    // Reset form
+    categoryInput.value = "";
+    tagsInput.value = "";
+  });
+
+  // Handle Edit and Delete buttons
+  tableBody.addEventListener("click", function (e) {
+    if (e.target.classList.contains("delete")) {
+      e.target.closest("tr").remove();
+    }
+
+    if (e.target.classList.contains("edit")) {
+      const row = e.target.closest("tr");
+      editIndex = row.rowIndex - 1;
+      categoryInput.value = row.cells[0].innerText;
+      tagsInput.value = row.cells[1].innerText;
+    }
+  });
+</script>
+
+
+  <!-- AOS Library -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Available Courses -->
+<section id="available" style="background:#f9f9f9; padding:50px 0;">
+  <h2 class="section-title text-center mb-5" data-aos="fade-down">Available Courses</h2>
+  <div class="container">
+    <div class="row g-4">
+      
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card course-card">
+          <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984" class="card-img-top" alt="Web Development">
+          <div class="card-body">
+            <h5 class="card-title">Web Development</h5>
+            <p class="card-text">Learn HTML, CSS, JavaScript and build modern websites.</p>
+            <a href="#" class="btn btn-primary">Enroll</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card course-card">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" class="card-img-top" alt="Data Science">
+          <div class="card-body">
+            <h5 class="card-title">Data Science</h5>
+            <p class="card-text">Master Python, Machine Learning, and AI concepts.</p>
+            <a href="#" class="btn btn-primary">Enroll</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card course-card">
+          <img src="https://images.unsplash.com/photo-1549924231-f129b911e442" class="card-img-top" alt="Digital Marketing">
+          <div class="card-body">
+            <h5 class="card-title">Digital Marketing</h5>
+            <p class="card-text">Grow brands using SEO, SEM, and social media strategies.</p>
+            <a href="#" class="btn btn-primary">Enroll</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CSS -->
+<style>
+  .course-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+  }
+</style>
+
+<!-- Initialize AOS -->
+<script>
+  AOS.init({
+    duration: 1000,  // animation duration
+    once: true       // run only once
+  });
+</script>
+
+
+
+      <!-- Course Preview Videos Section -->
+<section id="course-videos" style="background:#fff; padding:60px 0;">
+  <div class="container text-center">
+    <h2 class="section-title mb-5">Course Preview Videos</h2>
+    <div class="row g-4">
+      
+      <!-- Web Development Preview -->
+      <div class="col-md-4 reveal">
+        <div class="card shadow-sm rounded-3 border-0">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/qz0aGYrrlhU" title="HTML Crash Course" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Web Development (HTML Crash Course)</h5>
+            <p class="card-text">A quick intro to HTML and CSS fundamentals.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Science Preview -->
+      <div class="col-md-4 reveal">
+        <div class="card shadow-sm rounded-3 border-0">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/4I4XHYkd35k" title="Data Science Preview" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Data Science Course Preview</h5>
+            <p class="card-text">An overview of data science essentials and job roles.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- JavaScript Fundamentals -->
+      <div class="col-md-4 reveal">
+        <div class="card shadow-sm rounded-3 border-0">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/W6NZfCO5SIk" title="JavaScript Fundamentals" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">JavaScript Fundamentals</h5>
+            <p class="card-text">Learn the basics of JavaScript — variables, DOM, functions.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CSS for consistent video size and animations -->
+<style>
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 0.8s ease;
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  }
+</style>
+
+<!-- JavaScript Intersection Observer for scroll reveal -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    revealEls.forEach(el => observer.observe(el));
+  });
+</script>
+<!-- ======= Learners & Instructors (Professional Footer Section) ======= -->
+<section id="community" class="py-5" style="background:linear-gradient(180deg,#f8fafc, #eef2ff 60%, #ffffff);">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="text-center mb-4 reveal-up">
+      <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">Happening now</span>
+      <h2 class="mt-2 mb-2" style="font-weight:800; letter-spacing:-.3px;">Students Learning & Expert Teachers</h2>
+      <p class="text-muted mb-0">See who’s studying right now and meet our seasoned instructors guiding every step.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3 reveal-up">
+        <div class="p-3 bg-white rounded-4 shadow-sm h-100 d-flex flex-column align-items-center">
+          <div class="fs-1 fw-bold" data-countup="1248">0</div>
+          <div class="text-muted small">Active Learners</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal-up">
+        <div class="p-3 bg-white rounded-4 shadow-sm h-100 d-flex flex-column align-items-center">
+          <div class="fs-1 fw-bold" data-countup="87">0</div>
+          <div class="text-muted small">Live Sessions</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal-up">
+        <div class="p-3 bg-white rounded-4 shadow-sm h-100 d-flex flex-column align-items-center">
+          <div class="fs-1 fw-bold" data-countup="42">0</div>
+          <div class="text-muted small">Expert Teachers</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal-up">
+        <div class="p-3 bg-white rounded-4 shadow-sm h-100 d-flex flex-column align-items-center">
+          <div class="fs-1 fw-bold" data-countup="4.8">0</div>
+          <div class="text-muted small">Avg. Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learners Now -->
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h4 class="m-0">Students learning now</h4>
+      <a href="#available" class="btn btn-sm btn-outline-primary">Explore Courses</a>
+    </div>
+
+    <div id="learnersRow" class="row g-3"></div>
+
+    <!-- Teachers -->
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+      <h4 class="m-0">Experienced teachers</h4>
+      <div class="text-muted small">Hand-picked mentors with real-world experience</div>
+    </div>
+
+    <div id="teachersRow" class="row g-3"></div>
+
+  </div>
+</section>
+
+<!-- Scoped styles for this section -->
+<style>
+  #community .student-card, #community .teacher-card {
+    transition: transform .35s ease, box-shadow .35s ease;
+    border: 0;
+  }
+  #community .student-card:hover, #community .teacher-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, .12);
+  }
+  #community .avatar {
+    width:42px; height:42px; border-radius:50%; object-fit:cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  }
+  #community .course-pill {
+    font-size:.75rem; padding:.25rem .6rem; border-radius:999px;
+    background: linear-gradient(90deg,#6366f1,#a855f7); color:#fff;
+  }
+  /* Reveal on scroll */
+  .reveal-up { opacity:0; transform: translateY(16px); }
+  .reveal-up.revealed { opacity:1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease; }
+  /* Progress bar */
+  .progress.sm { height:8px; border-radius:999px; background:#e5e7eb; }
+  .progress-bar.gradient { background: linear-gradient(90deg,#06b6d4,#22d3ee,#38bdf8); }
+  @media (max-width:576px){
+    #community .fs-1 { font-size:1.8rem !important; }
+  }
+</style>
+
+<script>
+  // --- Demo data (images + text). Replace or keep.
+  const demoLearners = [
+    {
+      name: "Ayesha Khan",
+      img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop",
+      course: "Web Development",
+      progress: 72,
+      time: "Learning now • Module 5"
+    },
+    {
+      name: "Rahul Verma",
+      img: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400&auto=format&fit=crop",
+      course: "Data Science",
+      progress: 46,
+      time: "Live quiz • Week 3"
+    },
+    {
+      name: "Sara Ahmed",
+      img: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=400&auto=format&fit=crop",
+      course: "Programming",
+      progress: 88,
+      time: "Video lesson • Arrays"
+    },
+    {
+      name: "Bilal Hussain",
+      img: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=400&auto=format&fit=crop",
+      course: "AI & ML",
+      progress: 33,
+      time: "Notebook • Linear Reg."
+    }
+  ];
+
+  const demoTeachers = [
+    {
+      name: "Fatima Siddiqui",
+      role: "Senior Frontend Engineer",
+      img: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=800&auto=format&fit=crop",
+      rating: 4.9,
+      students: 12000,
+      tags: ["HTML/CSS", "React", "UX"],
+      bio: "10+ yrs building responsive apps at scale. Focus on accessibility & clean design."
+    },
+    {
+      name: "Omar Qureshi",
+      role: "Data Scientist",
+      img: "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=800&auto=format&fit=crop",
+      rating: 4.8,
+      students: 9800,
+      tags: ["Python", "Pandas", "ML"],
+      bio: "Turns messy data into insights. Mentor for Kaggle newbies and pros alike."
+    },
+    {
+      name: "Maria Iqbal",
+      role: "AI/ML Researcher",
+      img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop",
+      rating: 4.7,
+      students: 8400,
+      tags: ["Deep Learning", "NLP", "Llama"],
+      bio: "Ships real-world AI. Loves simplifying complex topics with visuals."
+    },
+    {
+      name: "Zain Ali",
+      role: "Business Strategy Coach",
+      img: "https://images.unsplash.com/photo-1544006659-f0b21884ce1d?q=80&w=800&auto=format&fit=crop",
+      rating: 4.8,
+      students: 7600,
+      tags: ["Marketing", "SEO", "Growth"],
+      bio: "Scaled multiple startups from 0→1M users with practical, hands-on playbooks."
+    }
+  ];
+
+  // --- Render learners
+  function renderLearners() {
+    const row = document.getElementById('learnersRow');
+    row.innerHTML = '';
+    demoLearners.forEach(l => {
+      row.insertAdjacentHTML('beforeend', `
+        <div class="col-12 col-md-6 reveal-up">
+          <div class="card student-card p-3">
+            <div class="d-flex align-items-start gap-3">
+              <img class="avatar" src="${l.img}" alt="${l.name}">
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between">
+                  <strong>${l.name}</strong>
+                  <span class="course-pill">${l.course}</span>
+                </div>
+                <div class="text-muted small mt-1">${l.time}</div>
+                <div class="mt-2">
+                  <div class="progress sm">
+                    <div class="progress-bar gradient" role="progressbar" style="width:${l.progress}%;" aria-valuenow="${l.progress}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <div class="small text-muted mt-1">${l.progress}% completed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+    });
+  }
+
+  // --- Render teachers
+  function renderTeachers() {
+    const row = document.getElementById('teachersRow');
+    row.innerHTML = '';
+    demoTeachers.forEach(t => {
+      row.insertAdjacentHTML('beforeend', `
+        <div class="col-12 col-md-6 col-lg-3 reveal-up">
+          <div class="card teacher-card h-100">
+            <img src="${t.img}" class="card-img-top" alt="${t.name}" style="height:160px; object-fit:cover;">
+            <div class="card-body">
+              <div class="d-flex align-items-start justify-content-between">
+                <div>
+                  <h6 class="mb-0">${t.name}</h6>
+                  <div class="text-muted small">${t.role}</div>
+                </div>
+                <div class="text-end small">
+                  <div class="fw-bold">★ ${t.rating}</div>
+                  <div class="text-muted">${t.students.toLocaleString()} students</div>
+                </div>
+              </div>
+              <div class="mt-2 d-flex flex-wrap gap-1">
+                ${t.tags.map(tag => `<span class="badge bg-light text-dark border">${tag}</span>`).join('')}
+              </div>
+              <p class="text-muted small mt-2 mb-0">${t.bio}</p>
+            </div>
+          </div>
+        </div>
+      `);
+    });
+  }
+
+  // --- Count up animation
+  function runCountUp(el) {
+    const target = parseFloat(el.getAttribute('data-countup')) || 0;
+    const isFloat = !Number.isInteger(target);
+    const duration = 900;
+    const start = performance.now();
+
+    function tick(ts) {
+      const p = Math.min(1, (ts - start) / duration);
+      const val = target * p;
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // --- Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('revealed');
+        if (entry.target.hasAttribute('data-countup')) runCountUp(entry.target);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    renderLearners();
+    renderTeachers();
+    // Observe reveal items
+    document.querySelectorAll('#community .reveal-up, #community [data-countup]').forEach(el => revealObserver.observe(el));
+  });
+</script>
+<!-- ======= /Learners & Instructors Section ======= -->
+
+
+
+
+  <!-- Professional Footer -->
+<footer style="background:#111; color:#fff; padding:40px 20px;">
+  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px; justify-content:space-between;">
+    
+    <!-- Logo & Description -->
+    <div style="flex:1 1 250px; min-width:200px;">
+      <div style="display:flex; align-items:center; margin-bottom:10px;">
+        <img src="lms-letter-logo-design-on-260nw-2193621453.webp" 
+             alt="AI-LMS Logo" 
+             style="width:40px; height:40px; margin-right:10px; object-fit:contain;">
+        <h2 style="font-size:1.2rem; font-weight:bold; margin:0;">AI-LMS</h2>
+      </div>
+      <p style="color:#aaa; font-size:0.9rem;">Smart, AI-powered Learning Management System helping students and instructors achieve more.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Quick Links</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#home" style="color:#aaa; text-decoration:none;">Home</a></li>
+        <li><a href="#courses" style="color:#aaa; text-decoration:none;">Courses</a></li>
+        <li><a href="#classes" style="color:#aaa; text-decoration:none;">Classes</a></li>
+        <li><a href="#payment" style="color:#aaa; text-decoration:none;">Payment & Subscription</a></li>
+        <li><a href="#reports" style="color:#aaa; text-decoration:none;">Reports</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Resources</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Blog</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Help Center</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Privacy Policy</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Social & Newsletter -->
+    <div style="flex:1 1 200px; min-width:200px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Connect With Us</h3>
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <a href="#" style="color:#aaa; font-size:1.2rem;">FB</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">TW</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">LI</a>
+      </div>
+      <p style="font-size:0.85rem; color:#aaa;">Subscribe to our newsletter for latest updates.</p>
+      <input type="email" placeholder="Email address" style="width:100%; padding:8px; margin-top:5px; border-radius:4px; border:none;">
+      <button style="margin-top:8px; width:100%; padding:8px; background:#ffcc00; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Subscribe</button>
+    </div>
+
+  </div>
+  <div style="text-align:center; margin-top:30px; font-size:0.8rem; color:#777;">
+    &copy; 2025 AI-LMS. All rights reserved.
+  </div>
+</footer>
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI-Powered LMS — Live Classes, Analytics, Quiz & Comms</title>
+  <script>
+  // Check if user is logged in
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (!currentUser) {
+    // Not logged in → redirect to login page
+    window.location.href = "login.html";
+  }
+</script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <link href="https://unpkg.com/lucide-static@0.344.0/font/lucide.css" rel="stylesheet">
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Smooth sticky header shadow on scroll */
+    header.stuck { box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    /* Hide scrollbars in horizontal scrollers */
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <!-- ===================== NAVBAR ===================== -->
+  <header id="topbar" class="sticky top-0 z-50 bg-gray-800 text-white border-b shadow-lg">
+  <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Brand -->
+      <a href="#home" class="flex items-center gap-2 font-semibold text-xl text-white">
+        <!-- Brain icon (SVG) -->
+        
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16M4 12h16"/>
+        </svg>
+        <span> LMS</span>
+      </a>
+
+      <!-- Desktop menu -->
+      <ul class="hidden md:flex items-center gap-6 text-sm font-medium">
+       <li><a href="home.html" class="hover:text-yellow-500">Home</a></li>
+      <li><a href="course.html" class="hover:text-yellow-500">Courses</a></li>
+      <li><a href="classes.html" class="hover:text-yellow-500">Classes</a></li>
+      <li><a href="student.html" class="hover:text-yellow-500">Payment & Subscription</a></li>
+      <li><a href="report.html" class="hover:text-yellow-500">Reports</a></li>
+      </ul>
+
+      <!-- Mobile hamburger -->
+      <button id="hamburger" class="md:hidden p-2 rounded-lg hover:bg-gray-700 transition" aria-label="Open menu">
+        <!-- Hamburger icon SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+  <!-- Mobile menu panel -->
+<div id="mobileMenu" class="md:hidden hidden border-t bg-gray-800 text-white shadow-lg">
+  <ul class="px-2 py-3 space-y-1 text-sm">
+    <li><a href="home.html" class="block px-3 py-2 rounded hover:text-yellow-500">Home</a></li>
+    <li><a href="course.html" class="block px-3 py-2 rounded hover:text-yellow-500">Courses</a></li>
+    <li><a href="classes.html" class="block px-3 py-2 rounded hover:text-yellow-500">Classes</a></li>
+    <li><a href="student.html" class="block px-3 py-2 rounded hover:text-yellow-500">Payment & Subscription</a></li>
+    <li><a href="report.html" class="block px-3 py-2 rounded hover:text-yellow-500">Reports</a></li>
+  </ul>
+</div>
+
+
+
+  <!-- JavaScript for Mobile Toggle -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
+</header>
+ <!-- ===================== HERO ===================== -->
+<section id="home" class="relative">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+      
+      <!-- Text Column -->
+      <div data-aos="fade-right" data-aos-delay="200">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight">
+          Build smarter courses with <span class="text-indigo-600">AI</span>
+        </h1>
+        <p class="mt-3 text-slate-600">
+          Auto-generate quizzes, get tailored course recommendations, analyze student performance, and run live classes with integrated communications.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#ai" class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">Explore AI Features</a>
+          <a href="#live" class="px-4 py-2 rounded-xl border hover:bg-slate-100 transition">Schedule a Live Class</a>
+        </div>
+      </div>
+
+      <!-- Image Column -->
+      <div class="md:order-last relative" data-aos="fade-left" data-aos-delay="400">
+        <div class="aspect-video rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200" 
+               alt="AI Learning Hero" 
+               class="w-full h-full object-cover">
+          
+          <!-- Optional overlay text on image -->
+          <div class="absolute inset-0 bg-black/25 flex flex-col items-center justify-center text-white p-6">
+            <i class="lucide-rocket text-5xl text-indigo-400"></i>
+            <p class="mt-3 font-semibold text-lg">Mobile-first, fast, and production-ready UI</p>
+         
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Background below hero -->
+  <div class="absolute inset-x-0 bottom-0 h-40 sm:h-60 bg-gradient-to-b from-white to-indigo-50 -z-10"></div>
+</section>
+
+<!-- AOS.js for animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+</script>
+
+
+  <!-- ===================== AI FEATURES ===================== -->
+<section id="ai" class="py-10 sm:py-16 bg-white border-t border-b">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold">AI‑Powered Features</h2>
+      <span class="text-xs sm:text-sm text-slate-500">Client-side demo using JS (NLP-simulated)</span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <!-- Quiz Generator -->
+      <div class="bg-slate-50 rounded-2xl border p-5" data-aos="fade-up">
+        <img src="AI-Quiz-Generator__6aab07c6ef5ed2b5922d11a3dce871a5.png" alt="Quiz Generator" class="w-full h-32 object-cover rounded-xl mb-3">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="lucide-square-pen text-indigo-600"></i>
+          <h3 class="font-semibold text-lg">Auto‑Generate Quiz Questions</h3>
+        </div>
+        <p class="text-sm text-slate-600 mt-1">Paste course content. We’ll extract key facts & generate MCQs and fill‑in‑the‑blank questions.</p>
+        <textarea id="courseContent" class="mt-3 w-full h-28 p-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Paste course notes here..."></textarea>
+        <div class="flex gap-2 mt-3">
+          <button id="genQuizBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm">Generate Quiz</button>
+          <button id="downloadQuizBtn" class="px-3 py-2 rounded-xl border text-sm hover:bg-slate-100">Download JSON</button>
+        </div>
+        <div id="quizOutput" class="mt-4 space-y-3 max-h-64 overflow-auto no-scrollbar"></div>
+      </div>
+
+      <!-- AI Recommendations -->
+      <div class="bg-slate-50 rounded-2xl border p-5" data-aos="fade-up" data-aos-delay="100">
+        <img src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400" alt="AI Recommendations" class="w-full h-32 object-cover rounded-xl mb-3">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="lucide-stars text-indigo-600"></i>
+          <h3 class="font-semibold text-lg">AI‑Based Recommendations</h3>
+        </div>
+        <p class="text-sm text-slate-600 mt-1">Tell us your interests and skill level. We’ll suggest courses.</p>
+        <div class="mt-3 grid sm:grid-cols-2 gap-3">
+          <input id="interestInput" class="w-full p-3 rounded-xl border" placeholder="e.g., React, Data Science">
+          <select id="levelSelect" class="w-full p-3 rounded-xl border">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <button id="recBtn" class="mt-3 px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm">Suggest Courses</button>
+        <div id="recOutput" class="mt-4 space-y-2"></div>
+      </div>
+
+      <!-- Analytics (Quick View) -->
+      <div class="bg-slate-50 rounded-2xl border p-5" data-aos="fade-up" data-aos-delay="200">
+        <img src="images_1_lUi2sxq.jpeg" alt="Analytics" class="w-full h-32 object-cover rounded-xl mb-3">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="lucide-activity text-indigo-600"></i>
+          <h3 class="font-semibold text-lg">Student Performance Analytics</h3>
+        </div>
+        <p class="text-sm text-slate-600 mt-1">Upload scores to detect weak areas and get improvement tips.</p>
+        <input id="scoresInput" type="file" accept="application/json" class="mt-2 block w-full text-sm" />
+        <button id="analyzeBtn" class="mt-3 px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm">Analyze</button>
+        <div class="mt-4">
+          <canvas id="analyticsChart" class="w-full"></canvas>
+        </div>
+        <ul id="adviceList" class="mt-3 list-disc list-inside text-sm text-slate-700"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // ======= Quiz Generator with Edit/Delete =======
+  function createQuizItem(text){
+    const div = document.createElement('div');
+    div.className = 'p-2 bg-white border rounded-xl flex justify-between items-center';
+    const span = document.createElement('span'); span.textContent = text;
+    const btns = document.createElement('div');
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit'; editBtn.className='px-2 py-1 text-xs bg-yellow-200 rounded ml-1';
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete'; delBtn.className='px-2 py-1 text-xs bg-red-200 rounded ml-1';
+    
+    editBtn.onclick = ()=> {
+      const newText = prompt('Edit question:', span.textContent);
+      if(newText) span.textContent = newText;
+    };
+    delBtn.onclick = ()=> div.remove();
+    
+    btns.append(editBtn, delBtn);
+    div.append(span, btns);
+    return div;
+  }
+
+  document.getElementById('genQuizBtn').addEventListener('click', () => {
+    const content = document.getElementById('courseContent').value.trim();
+    const output = document.getElementById('quizOutput');
+    if(!content) return alert('Please paste course content!');
+    output.innerHTML = '';
+    const questions = [
+      `Q1: What is a key point in: ${content.split(' ')[0]}?`,
+      `Q2: Explain ${content.split(' ')[1]} in simple terms.`,
+      `Q3: Fill in the blank: ${content.split(' ')[2]} is ...`
+    ];
+    questions.forEach(q => output.appendChild(createQuizItem(q)));
+  });
+
+  document.getElementById('downloadQuizBtn').addEventListener('click', () => {
+    const data = Array.from(document.querySelectorAll('#quizOutput span')).map(s=>s.textContent);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'quiz.json'; a.click();
+  });
+
+  // ======= AI Recommendations with Edit/Delete =======
+  function createRecItem(text){
+    const div = document.createElement('div');
+    div.className = 'p-2 bg-white border rounded-xl flex justify-between items-center';
+    const span = document.createElement('span'); span.textContent = text;
+    const btns = document.createElement('div');
+    const editBtn = document.createElement('button');
+    editBtn.textContent='Edit'; editBtn.className='px-2 py-1 text-xs bg-yellow-200 rounded ml-1';
+    const delBtn = document.createElement('button');
+    delBtn.textContent='Delete'; delBtn.className='px-2 py-1 text-xs bg-red-200 rounded ml-1';
+    
+    editBtn.onclick = ()=> {
+      const newText = prompt('Edit recommendation:', span.textContent);
+      if(newText) span.textContent=newText;
+    };
+    delBtn.onclick = ()=> div.remove();
+    
+    btns.append(editBtn, delBtn);
+    div.append(span, btns);
+    return div;
+  }
+
+  document.getElementById('recBtn').addEventListener('click', () => {
+    const interest = document.getElementById('interestInput').value.trim();
+    const level = document.getElementById('levelSelect').value;
+    const output = document.getElementById('recOutput');
+    if(!interest) return alert('Please enter your interests!');
+    output.innerHTML='';
+    const recs = [
+      `${level} course on ${interest} 101`,
+      `${level} advanced ${interest} project course`,
+      `${level} ${interest} for professionals`
+    ];
+    recs.forEach(r=>output.appendChild(createRecItem(r)));
+  });
+
+  // ======= Student Analytics =======
+  let analyticsChart;
+  document.getElementById('analyzeBtn').addEventListener('click', () => {
+    const file = document.getElementById('scoresInput').files[0];
+    if(!file) return alert('Please upload a JSON file with scores!');
+    const reader = new FileReader();
+    reader.onload = function(e){
+      try{
+        const data = JSON.parse(e.target.result);
+        const labels = Object.keys(data);
+        const scores = Object.values(data);
+        if(analyticsChart) analyticsChart.destroy();
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        analyticsChart = new Chart(ctx, {
+          type:'bar',
+          data:{ labels, datasets:[{ label:'Scores', data:scores, backgroundColor:'#6366f1' }] },
+          options:{ responsive:true, plugins:{legend:{display:false}} }
+        });
+
+        const adviceList = document.getElementById('adviceList');
+        adviceList.innerHTML='';
+        labels.forEach((l,i)=>{
+          const li = document.createElement('li');
+          li.className='flex justify-between items-center';
+          const span = document.createElement('span');
+          span.innerHTML = `<strong>${l}:</strong> ${scores[i]<60?'Needs improvement':'Good'}`;
+          const btns = document.createElement('div');
+          const editBtn = document.createElement('button'); editBtn.textContent='Edit'; editBtn.className='px-2 py-1 text-xs bg-yellow-200 rounded ml-1';
+          const delBtn = document.createElement('button'); delBtn.textContent='Delete'; delBtn.className='px-2 py-1 text-xs bg-red-200 rounded ml-1';
+          editBtn.onclick=()=>{ const newText=prompt('Edit advice:', span.textContent); if(newText) span.textContent=newText; }
+          delBtn.onclick=()=>li.remove();
+          btns.append(editBtn, delBtn);
+          li.append(span, btns);
+          adviceList.appendChild(li);
+        });
+      }catch(err){ alert('Invalid JSON file!'); }
+    };
+    reader.readAsText(file);
+  });
+</script>
+
+<!-- AOS.js -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration:1000, once:true });
+</script>
+
+
+  <!-- ===================== LIVE CLASSES ===================== -->
+  <section id="live" class="py-10 sm:py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold">Live Classes & Integrations</h2>
+        <span class="text-xs sm:text-sm text-slate-500">Zoom / Google Meet links supported</span>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Schedule / Join -->
+        <div class="bg-white rounded-2xl border p-5">
+          <div class="flex items-center gap-2">
+            <i class="lucide-video text-indigo-600"></i>
+            <h3 class="font-semibold text-lg">Schedule or Join</h3>
+          </div>
+          <label class="block mt-3 text-sm font-medium">Meeting Title</label>
+          <input id="meetTitle" class="w-full p-3 rounded-xl border" placeholder="e.g., Week 3 – Arrays" />
+          <label class="block mt-3 text-sm font-medium">Start Time</label>
+          <input id="meetTime" type="datetime-local" class="w-full p-3 rounded-xl border" />
+          <label class="block mt-3 text-sm font-medium">Zoom/Meet Link</label>
+          <input id="meetLink" class="w-full p-3 rounded-xl border" placeholder="https://zoom.us/j/... or https://meet.google.com/..." />
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button id="saveMeetingBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm">Save</button>
+            <a id="joinMeetingA" href="#" target="_blank" class="px-3 py-2 rounded-xl border text-sm hover:bg-slate-100">Join Now</a>
+          </div>
+          <p class="text-xs text-slate-500 mt-2">(This demo stores meetings in your browser only.)</p>
+          <div id="meetingsList" class="mt-4 space-y-2 max-h-40 overflow-auto no-scrollbar"></div>
+        </div>
+
+        <!-- Attendance quick check -->
+        <div class="bg-white rounded-2xl border p-5">
+          <div class="flex items-center gap-2">
+            <i class="lucide-user-check text-indigo-600"></i>
+            <h3 class="font-semibold text-lg">Attendance</h3>
+          </div>
+          <p class="text-sm text-slate-600">Generate a one-time code for students to mark attendance.</p>
+          <div class="mt-3 flex gap-2">
+            <button id="genCodeBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm">Generate Code</button>
+            <input id="codeInput" class="flex-1 p-3 rounded-xl border" placeholder="Enter code to mark present" />
+            <button id="markPresentBtn" class="px-3 py-2 rounded-xl border text-sm">Mark</button>
+          </div>
+          <ul id="attendanceList" class="mt-3 text-sm text-slate-700 space-y-1 max-h-36 overflow-auto no-scrollbar"></ul>
+        </div>
+
+        <!-- Resources -->
+        <div class="bg-white rounded-2xl border p-5">
+          <div class="flex items-center gap-2">
+            <i class="lucide-link text-indigo-600"></i>
+            <h3 class="font-semibold text-lg">Class Resources</h3>
+          </div>
+          <p class="text-sm text-slate-600">Add lecture slides, assignments and links.</p>
+          <div class="mt-3 flex gap-2">
+            <input id="resTitle" class="flex-[2] p-3 rounded-xl border" placeholder="Title">
+            <input id="resUrl" class="flex-[3] p-3 rounded-xl border" placeholder="https://...">
+            <button id="addResBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm">Add</button>
+          </div>
+          <ul id="resourcesList" class="mt-3 text-sm space-y-1 max-h-40 overflow-auto no-scrollbar"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMMUNICATION ===================== -->
+<section id="comms" class="py-10 sm:py-16 bg-white border-t border-b" data-aos="fade-up">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
+      <h2 class="text-2xl sm:text-3xl font-bold">Instructor–Student Chat & Q/A Forum</h2>
+      <span class="text-xs sm:text-sm text-slate-500">Realtime feel (local demo)</span>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <!-- Chat -->
+      <div class="bg-slate-50 rounded-2xl border p-5 flex flex-col" data-aos="zoom-in">
+        <div class="flex items-center gap-2 mb-3">
+          <i class="lucide-message-circle text-indigo-600"></i>
+          <h3 class="font-semibold text-lg">Classroom Chat</h3>
+        </div>
+        <div id="chatWindow" class="flex-1 bg-white rounded-xl border p-3 max-h-80 overflow-auto no-scrollbar text-sm"></div>
+        <div class="mt-3 flex gap-2">
+          <input id="chatName" class="w-32 p-3 rounded-xl border" placeholder="Name">
+          <input id="chatMsg" class="flex-1 p-3 rounded-xl border" placeholder="Type a message...">
+          <button id="sendChatBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">Send</button>
+        </div>
+      </div>
+
+      <!-- Q/A Forum -->
+      <div class="bg-slate-50 rounded-2xl border p-5" data-aos="fade-left">
+        <div class="flex items-center gap-2 mb-3">
+          <i class="lucide-help-circle text-indigo-600"></i>
+          <h3 class="font-semibold text-lg">Q/A Forum</h3>
+        </div>
+        <div class="flex gap-2">
+          <input id="qaTitle" class="flex-1 p-3 rounded-xl border" placeholder="Ask a question...">
+          <button id="postQBtn" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">Post</button>
+        </div>
+        <ul id="qaList" class="mt-4 space-y-3"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ====== Chat functionality ======
+  const chatWindow = document.getElementById('chatWindow');
+  const chatName = document.getElementById('chatName');
+  const chatMsg = document.getElementById('chatMsg');
+  const sendChatBtn = document.getElementById('sendChatBtn');
+
+  function createChatMessage(name, msg) {
+    const div = document.createElement('div');
+    div.classList.add('flex', 'items-center', 'justify-between', 'mb-1', 'p-2', 'bg-gray-100', 'rounded-lg');
+
+    const span = document.createElement('span');
+    span.innerHTML = `<strong>${name}:</strong> ${msg}`;
+    span.classList.add('flex-1');
+
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.className = 'ml-2 px-2 py-1 text-xs bg-yellow-400 rounded hover:bg-yellow-500';
+    editBtn.addEventListener('click', () => {
+      const newMsg = prompt("Edit your message:", msg);
+      if(newMsg !== null) {
+        span.innerHTML = `<strong>${name}:</strong> ${newMsg}`;
+      }
+    });
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.className = 'ml-1 px-2 py-1 text-xs bg-red-500 rounded text-white hover:bg-red-600';
+    delBtn.addEventListener('click', () => {
+      div.remove();
+    });
+
+    div.appendChild(span);
+    div.appendChild(editBtn);
+    div.appendChild(delBtn);
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  sendChatBtn.addEventListener('click', () => {
+    const name = chatName.value.trim() || "Anonymous";
+    const msg = chatMsg.value.trim();
+    if(msg === "") return;
+    createChatMessage(name, msg);
+    chatMsg.value = "";
+  });
+
+  chatMsg.addEventListener('keydown', (e) => {
+    if(e.key === "Enter") sendChatBtn.click();
+  });
+
+  // ====== Q/A Forum functionality ======
+  const qaTitle = document.getElementById('qaTitle');
+  const postQBtn = document.getElementById('postQBtn');
+  const qaList = document.getElementById('qaList');
+
+  function createQAPost(question) {
+    const li = document.createElement('li');
+    li.className = 'bg-white p-3 rounded-xl border flex justify-between items-center';
+
+    const span = document.createElement('span');
+    span.textContent = question;
+    span.className = 'flex-1';
+
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.className = 'ml-2 px-2 py-1 text-xs bg-yellow-400 rounded hover:bg-yellow-500';
+    editBtn.addEventListener('click', () => {
+      const newQuestion = prompt("Edit your question:", question);
+      if(newQuestion !== null) {
+        span.textContent = newQuestion;
+      }
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.className = 'ml-1 px-2 py-1 text-xs bg-red-500 rounded text-white hover:bg-red-600';
+    delBtn.addEventListener('click', () => li.remove());
+
+    li.appendChild(span);
+    li.appendChild(editBtn);
+    li.appendChild(delBtn);
+    qaList.appendChild(li);
+  }
+
+  postQBtn.addEventListener('click', () => {
+    const question = qaTitle.value.trim();
+    if(question === "") return;
+    createQAPost(question);
+    qaTitle.value = "";
+  });
+
+  qaTitle.addEventListener('keydown', (e) => {
+    if(e.key === "Enter") postQBtn.click();
+  });
+</script>
+
+
+  <!-- ===================== ANALYTICS (DETAIL) ===================== -->
+<section id="analytics" class="py-10 sm:py-16" data-aos="fade-up">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-2">
+      <h2 class="text-2xl sm:text-3xl font-bold">Performance Analytics – Detailed</h2>
+      <span class="text-xs sm:text-sm text-slate-500">Upload a JSON like { "Math": 72, "Arrays": 55, "Algorithms": 80 }</span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <!-- Chart -->
+      <div class="bg-white rounded-2xl border p-5 lg:col-span-2" data-aos="zoom-in">
+        <canvas id="bigChart"></canvas>
+      </div>
+
+      <!-- Insights -->
+      <div class="bg-white rounded-2xl border p-5" data-aos="fade-left">
+        <h3 class="font-semibold">Insights</h3>
+        <ul id="insights" class="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1"></ul>
+        <button id="exportReportBtn" class="mt-4 w-full px-3 py-2 rounded-xl border text-sm hover:bg-slate-100 transition">Export Report (JSON)</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- AOS.js -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+
+  // --- Sample Student Data (JSON) ---
+  const studentData = {
+    "Math": 72,
+    "Arrays": 55,
+    "Algorithms": 80,
+    "Data Structures": 60,
+    "Databases": 90
+  };
+
+  // --- Generate Chart ---
+  const ctx = document.getElementById('bigChart').getContext('2d');
+  const bigChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(studentData),
+      datasets: [{
+        label: 'Score (%)',
+        data: Object.values(studentData),
+        backgroundColor: 'rgba(59, 130, 246, 0.7)', // Tailwind indigo-500
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 1,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100
+        }
+      }
+    }
+  });
+
+  // --- Generate Insights ---
+  const insightsList = document.getElementById('insights');
+  const threshold = 65; // Below this is weak
+  Object.entries(studentData).forEach(([subject, score]) => {
+    const li = document.createElement('li');
+    if(score < threshold){
+      li.textContent = `${subject} is weak (${score}%). Consider reviewing lessons and exercises.`;
+      li.classList.add('text-red-600');
+    } else {
+      li.textContent = `${subject} is good (${score}%). Keep up the good work.`;
+      li.classList.add('text-green-600');
+    }
+    insightsList.appendChild(li);
+  });
+
+  // --- Export JSON Report ---
+  const exportBtn = document.getElementById('exportReportBtn');
+  exportBtn.addEventListener('click', () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(studentData, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "student_performance.json");
+    dlAnchor.click();
+  });
+</script>
+
+  <!-- ===================== NOTIFICATIONS ===================== -->
+<section id="notifications" class="py-10 sm:py-16 bg-white border-t" data-aos="fade-up">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2">
+      <h2 class="text-2xl sm:text-3xl font-bold">Push Notifications</h2>
+      <span class="text-xs sm:text-sm text-slate-500">Browser notifications for new lectures, assignments, deadlines</span>
+    </div>
+
+    <div class="bg-slate-50 rounded-2xl border p-5" data-aos="zoom-in">
+      <p class="text-sm text-slate-600">Click a quick test below after you enable notifications.</p>
+      <div class="mt-3 grid sm:grid-cols-3 gap-3">
+        <button data-noti="New lecture uploaded: Intro to Graphs" class="notiBtn px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">New Lecture</button>
+        <button data-noti="Assignment 2 posted: Sorting Practice" class="notiBtn px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">Assignment</button>
+        <button data-noti="Deadline tomorrow: Submit Quiz 1" class="notiBtn px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition">Deadline</button>
+      </div>
+      <p class="text-xs text-slate-500 mt-2">(Requires user permission; on mobile, ensure the site is added to home screen for best results.)</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Function to request notification permission
+  function requestNotificationPermission() {
+    if("Notification" in window){
+      Notification.requestPermission().then(permission => {
+        if(permission !== "granted"){
+          alert("Notifications permission denied. Enable it in browser settings to receive alerts.");
+        }
+      });
+    } else {
+      alert("Your browser does not support notifications.");
+    }
+  }
+
+  // Attach click events to buttons
+  document.querySelectorAll('.notiBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Request permission first
+      if(Notification.permission !== "granted"){
+        requestNotificationPermission();
+      }
+      // Show notification if allowed
+      if(Notification.permission === "granted"){
+        const notification = new Notification("AI LMS Alert", {
+          body: btn.getAttribute("data-noti"),
+          icon: "https://cdn-icons-png.flaticon.com/512/3079/3079103.png" // optional icon
+        });
+      }
+    });
+  });
+</script>
+
+<!-- AOS.js -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+</script>
+
+
+  
+  <!-- ===================== SCRIPTS ===================== -->
+  <script>
+    // ----- Sticky header shadow -----
+    const topbar = document.getElementById('topbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 4) topbar.classList.add('stuck');
+      else topbar.classList.remove('stuck');
+    });
+
+    // ----- Mobile menu toggle -----
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', ()=> mobileMenu.classList.add('hidden')));
+
+    // ----- Footer year -----
+    document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+    // ===================== AI QUIZ GENERATOR =====================
+    const genQuizBtn = document.getElementById('genQuizBtn');
+    const quizOutput = document.getElementById('quizOutput');
+    const contentEl = document.getElementById('courseContent');
+    const downloadQuizBtn = document.getElementById('downloadQuizBtn');
+    let lastQuiz = [];
+
+    function extractKeywords(text){
+      return [...new Set(text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g,' ')
+        .split(/\s+/)
+        .filter(w => w.length>3 && !['with','that','from','this','have','will','your','into','about','their','what','when','where','which','shall','there','then','them','they','been','were','also','some','more','most','such','only','each','very','than','like','because','these','those','over','under','between','after','before','using','while','onto','through','without','within','into','upon','into','into'].includes(w)))];
+    }
+
+    function makeMCQ(sent, keywords){
+      const key = keywords.find(k => sent.toLowerCase().includes(k));
+      if(!key) return null;
+      const correct = key;
+      const distractors = keywords.filter(k => k!==correct).slice(0,3);
+      const options = [correct, ...distractors];
+      for (let i=options.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [options[i],options[j]]=[options[j],options[i]]; }
+      return {type:'mcq', q:`What best matches this statement: "${sent.trim()}"?`, options, answer: correct};
+    }
+
+    function makeFill(sent, keywords){
+      const key = keywords.find(k => sent.toLowerCase().includes(k));
+      if(!key) return null;
+      return {type:'fill', q: sent.replace(new RegExp(key,'i'),'_____'), answer: key};
+    }
+
+    genQuizBtn.addEventListener('click', () => {
+      const text = contentEl.value.trim();
+      if(!text){ alert('Please paste course content first.'); return; }
+      const sentences = text.split(/(?<=[.!?])\s+/);
+      const keywords = extractKeywords(text);
+      const items = [];
+      sentences.forEach(s => {
+        const mcq = makeMCQ(s, keywords); if(mcq) items.push(mcq);
+        const fib = makeFill(s, keywords); if(fib) items.push(fib);
+      });
+      lastQuiz = items.slice(0, 10);
+      renderQuiz(lastQuiz);
+    });
+
+    function renderQuiz(list){
+      quizOutput.innerHTML = '';
+      if(list.length===0){ quizOutput.innerHTML = '<p class="text-sm text-slate-600">No questions generated. Try adding more content.</p>'; return; }
+      list.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl border p-3';
+        if(item.type==='mcq'){
+          card.innerHTML = `<p class="font-medium">Q${idx+1}. ${item.q}</p>` +
+            item.options.map((opt,i)=>`<label class='flex items-center gap-2 mt-2 text-sm'><input type='radio' name='q${idx}' value='${opt}' class='accent-indigo-600'> ${opt}</label>`).join('') +
+            `<button data-ans='${item.answer}' class='reveal mt-3 px-2 py-1 rounded-lg text-xs border'>Reveal Answer</button>`;
+        } else {
+          card.innerHTML = `<p class="font-medium">Q${idx+1}. ${item.q}</p>` +
+            `<input data-ans='${item.answer}' class='mt-2 w-full p-2 rounded-lg border text-sm' placeholder='Your answer'>`+
+            `<button class='checkFill mt-3 px-2 py-1 rounded-lg text-xs border'>Check</button>`+
+            `<span class='ml-2 text-xs text-slate-500 hidden okTag'>✓ Correct</span>`+
+            `<span class='ml-2 text-xs text-red-500 hidden noTag'>✗ Try again</span>`;
+        }
+        quizOutput.appendChild(card);
+      });
+
+      quizOutput.querySelectorAll('.reveal').forEach(btn=>btn.addEventListener('click',()=>{
+        btn.insertAdjacentHTML('afterend', `<span class='ml-2 text-xs text-indigo-600'>Answer: <b>${btn.dataset.ans}</b></span>`);
+        btn.disabled = true;
+      }));
+      quizOutput.querySelectorAll('.checkFill').forEach(btn=>btn.addEventListener('click',()=>{
+        const input = btn.previousElementSibling; const ans = input.dataset.ans.toLowerCase().trim();
+        const ok = input.value.toLowerCase().trim()===ans;
+        btn.nextElementSibling.classList.toggle('hidden', !ok);
+        btn.nextElementSibling.nextElementSibling.classList.toggle('hidden', ok);
+      }));
+    }
+
+    downloadQuizBtn.addEventListener('click', ()=>{
+      if(!lastQuiz.length){ alert('Generate a quiz first.'); return; }
+      const blob = new Blob([JSON.stringify(lastQuiz,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'quiz.json'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ===================== AI RECOMMENDATIONS =====================
+    const catalog = [
+      {title:'Intro to HTML & CSS', tags:['html','css','frontend'], level:'beginner'},
+      {title:'JavaScript Foundations', tags:['javascript','frontend'], level:'beginner'},
+      {title:'React for Developers', tags:['react','javascript','frontend'], level:'intermediate'},
+      {title:'Data Science with Python', tags:['data','pandas','python'], level:'beginner'},
+      {title:'Machine Learning A-Z', tags:['ml','data','python'], level:'intermediate'},
+      {title:'Deep Learning Essentials', tags:['dl','neural','python'], level:'advanced'},
+      {title:'SQL & Data Modeling', tags:['sql','database','data'], level:'intermediate'},
+      {title:'Algorithms & DSA', tags:['dsa','algorithms','cs'], level:'advanced'}
+    ];
+    const recBtn = document.getElementById('recBtn');
+    const recOutput = document.getElementById('recOutput');
+    recBtn.addEventListener('click', ()=>{
+      const input = document.getElementById('interestInput').value.toLowerCase();
+      const level = document.getElementById('levelSelect').value;
+      const interests = input.split(/[,\s]+/).filter(Boolean);
+      const matches = catalog
+        .filter(c => c.level===level)
+        .map(c => ({...c, score: c.tags.reduce((acc,t)=> acc + (interests.includes(t)?1:0), 0)}))
+        .filter(c => c.score>0)
+        .sort((a,b)=> b.score - a.score)
+        .slice(0,5);
+      recOutput.innerHTML = matches.length ? '' : '<p class="text-sm text-slate-600">No direct matches. Try different interests (e.g., react, data, python).</p>';
+      matches.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'bg-white rounded-xl border p-3';
+        div.innerHTML = `<div class='flex items-center justify-between'><p class='font-medium'>${m.title}</p><span class='text-xs px-2 py-1 rounded-lg bg-slate-100'>${m.level}</span></div><p class='text-xs text-slate-500 mt-1'>Tags: ${m.tags.join(', ')}</p>`;
+        recOutput.appendChild(div);
+      });
+    });
+
+    // ===================== ANALYTICS =====================
+    let analyticsChart, bigChart;
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const scoresInput = document.getElementById('scoresInput');
+    const adviceList = document.getElementById('adviceList');
+    const insights = document.getElementById('insights');
+
+    function renderCharts(data){
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+      if(analyticsChart){ analyticsChart.destroy(); }
+      analyticsChart = new Chart(document.getElementById('analyticsChart'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Scores', data: values }] },
+        options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true, max:100 } } }
+      });
+      if(bigChart){ bigChart.destroy(); }
+      bigChart = new Chart(document.getElementById('bigChart'), {
+        type: 'radar',
+        data: { labels, datasets: [{ label: 'Proficiency', data: values, fill: true }] },
+        options: { responsive:true, scales:{ r:{ beginAtZero:true, max:100 } } }
+      });
+    }
+
+    function analyze(data){
+      // Simple tips engine
+      const entries = Object.entries(data).sort((a,b)=> a[1]-b[1]);
+      const weak = entries.slice(0, Math.min(3, entries.length));
+      adviceList.innerHTML = '';
+      insights.innerHTML = '';
+      weak.forEach(([topic,score])=>{
+        const li = document.createElement('li');
+        li.textContent = `${topic}: ${score} — Focus on basics, do 20 practice questions, rewatch the lecture.`;
+        adviceList.appendChild(li);
+        const li2 = document.createElement('li');
+        li2.textContent = `Weak area: ${topic}. Suggested: recap notes, attempt spaced repetition for key terms.`;
+        insights.appendChild(li2);
+      });
+    }
+
+    analyzeBtn.addEventListener('click', async ()=>{
+      if(!scoresInput.files.length){
+        // Use a sample if user didn't upload
+        const sample = { "Variables": 76, "Loops": 68, "Arrays": 54, "Functions": 63, "Objects": 47 };
+        renderCharts(sample); analyze(sample); return;
+      }
+      const file = scoresInput.files[0];
+      try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        renderCharts(json); analyze(json);
+      } catch(e){ alert('Invalid JSON file. Example: { "Topic": 80, "Another": 55 }'); }
+    });
+
+    document.getElementById('exportReportBtn').addEventListener('click', ()=>{
+      const data = bigChart ? bigChart.data.labels.reduce((acc, lbl, i)=>{ acc[lbl] = bigChart.data.datasets[0].data[i]; return acc; }, {}) : {};
+      const blob = new Blob([JSON.stringify({ generatedAt: new Date().toISOString(), scores: data }, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'analytics-report.json'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // ===================== LIVE CLASSES STORAGE =====================
+    const meetTitle = document.getElementById('meetTitle');
+    const meetTime = document.getElementById('meetTime');
+    const meetLink = document.getElementById('meetLink');
+    const saveMeetingBtn = document.getElementById('saveMeetingBtn');
+    const joinMeetingA = document.getElementById('joinMeetingA');
+    const meetingsList = document.getElementById('meetingsList');
+
+    function loadMeetings(){ return JSON.parse(localStorage.getItem('meetings')||'[]'); }
+    function saveMeetings(list){ localStorage.setItem('meetings', JSON.stringify(list)); }
+
+    function renderMeetings(){
+      const list = loadMeetings();
+      meetingsList.innerHTML = '';
+      list.forEach((m, idx)=>{
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between bg-slate-50 rounded-xl p-3';
+        row.innerHTML = `<div><p class='font-medium'>${m.title}</p><p class='text-xs text-slate-500'>${new Date(m.time).toLocaleString()}</p></div>`+
+          `<div class='flex items-center gap-2'><a class='px-2 py-1 rounded-lg border text-xs' href='${m.link}' target='_blank'>Join</a>`+
+          `<button class='px-2 py-1 rounded-lg border text-xs text-red-600 delBtn' data-idx='${idx}'>Delete</button></div>`;
+        meetingsList.appendChild(row);
+      });
+      meetingsList.querySelectorAll('.delBtn').forEach(btn=>btn.addEventListener('click',()=>{
+        const list = loadMeetings(); list.splice(Number(btn.dataset.idx),1); saveMeetings(list); renderMeetings();
+      }));
+    }
+
+    saveMeetingBtn.addEventListener('click', ()=>{
+      if(!meetTitle.value || !meetTime.value || !meetLink.value){ alert('Fill all meeting fields.'); return; }
+      const list = loadMeetings();
+      list.push({ title: meetTitle.value, time: meetTime.value, link: meetLink.value });
+      saveMeetings(list); renderMeetings();
+      joinMeetingA.href = meetLink.value;
+      alert('Meeting saved. Use the Join button to open the link.');
+    });
+
+    // default join link is latest meeting if any
+    const existing = loadMeetings(); if(existing[existing.length-1]) joinMeetingA.href = existing[existing.length-1].link;
+    renderMeetings();
+
+    // Attendance
+    const genCodeBtn = document.getElementById('genCodeBtn');
+    const codeInput = document.getElementById('codeInput');
+    const markPresentBtn = document.getElementById('markPresentBtn');
+    const attendanceList = document.getElementById('attendanceList');
+    let currentCode = '';
+    genCodeBtn.addEventListener('click', ()=>{ currentCode = Math.random().toString(36).slice(2,8).toUpperCase(); alert('Attendance code: '+currentCode); });
+    markPresentBtn.addEventListener('click', ()=>{
+      if(codeInput.value.trim().toUpperCase()===currentCode){
+        const item = document.createElement('li'); item.textContent = `Present @ ${new Date().toLocaleTimeString()}`; attendanceList.appendChild(item); codeInput.value='';
+      } else { alert('Invalid code.'); }
+    });
+
+    // Resources
+    const resTitle = document.getElementById('resTitle');
+    const resUrl = document.getElementById('resUrl');
+    const addResBtn = document.getElementById('addResBtn');
+    const resourcesList = document.getElementById('resourcesList');
+    function renderResources(){
+      const list = JSON.parse(localStorage.getItem('resources')||'[]');
+      resourcesList.innerHTML = '';
+      list.forEach((r, idx)=>{
+        const li = document.createElement('li');
+        li.className = 'flex items-center justify-between bg-slate-50 rounded-xl p-3';
+        li.innerHTML = `<a class='text-indigo-600 hover:underline' target='_blank' href='${r.url}'>${r.title}</a>`+
+          `<button class='px-2 py-1 rounded-lg border text-xs text-red-600 delRes' data-idx='${idx}'>Delete</button>`;
+        resourcesList.appendChild(li);
+      });
+      resourcesList.querySelectorAll('.delRes').forEach(btn=>btn.addEventListener('click',()=>{
+        const list = JSON.parse(localStorage.getItem('resources')||'[]');
+        list.splice(Number(btn.dataset.idx),1);
+        localStorage.setItem('resources', JSON.stringify(list));
+        renderResources();
+      }));
+    }
+    addResBtn.addEventListener('click', ()=>{
+      if(!resTitle.value || !resUrl.value){ alert('Add title & URL'); return; }
+      const list = JSON.parse(localStorage.getItem('resources')||'[]');
+      list.push({ title: resTitle.value, url: resUrl.value });
+      localStorage.setItem('resources', JSON.stringify(list));
+      resTitle.value=''; resUrl.value=''; renderResources();
+    });
+    renderResources();
+
+    // ===================== CHAT & Q/A =====================
+    const chatWindow = document.getElementById('chatWindow');
+    const chatName = document.getElementById('chatName');
+    const chatMsg = document.getElementById('chatMsg');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+
+    function addChat(name, msg){
+      const row = document.createElement('div');
+      row.className = 'mb-2';
+      row.innerHTML = `<span class='text-xs text-slate-500 mr-2'>${new Date().toLocaleTimeString()}</span>`+
+        `<span class='font-semibold'>${name||'Anon'}:</span> <span>${msg}</span>`;
+      chatWindow.appendChild(row); chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+    sendChatBtn.addEventListener('click', ()=>{
+      if(!chatMsg.value.trim()) return; addChat(chatName.value.trim()||'Student', chatMsg.value.trim()); chatMsg.value='';
+    });
+    chatMsg.addEventListener('keydown', e=>{ if(e.key==='Enter'){ sendChatBtn.click(); }});
+
+    // Q/A Forum
+    const qaTitle = document.getElementById('qaTitle');
+    const postQBtn = document.getElementById('postQBtn');
+    const qaList = document.getElementById('qaList');
+
+    function renderQA(){
+      const list = JSON.parse(localStorage.getItem('qa')||'[]');
+      qaList.innerHTML = '';
+      list.forEach((q, idx)=>{
+        const li = document.createElement('li');
+        li.className = 'bg-white rounded-xl border p-3';
+        li.innerHTML = `<p class='font-medium'>Q: ${q.title}</p>`+
+          `<div class='mt-2 flex gap-2'><input class='flex-1 p-2 rounded-lg border text-sm ansInput' placeholder='Write an answer...'><button class='px-2 py-1 rounded-lg border text-xs addAns' data-idx='${idx}'>Answer</button></div>`+
+          `<ul class='mt-2 text-sm text-slate-700 space-y-1'>${q.answers.map(a=>`<li>• ${a}</li>`).join('')}</ul>`;
+        qaList.appendChild(li);
+      });
+      qaList.querySelectorAll('.addAns').forEach(btn=>btn.addEventListener('click',()=>{
+        const list = JSON.parse(localStorage.getItem('qa')||'[]');
+        const parent = btn.closest('li');
+        const input = parent.querySelector('.ansInput');
+        if(!input.value.trim()) return;
+        list[btn.dataset.idx].answers.push(input.value.trim());
+        localStorage.setItem('qa', JSON.stringify(list));
+        renderQA();
+      }));
+    }
+
+    postQBtn.addEventListener('click', ()=>{
+      if(!qaTitle.value.trim()) return; const list = JSON.parse(localStorage.getItem('qa')||'[]');
+      list.unshift({ title: qaTitle.value.trim(), answers: [] }); localStorage.setItem('qa', JSON.stringify(list)); qaTitle.value=''; renderQA();
+    });
+    renderQA();
+
+    // ===================== NOTIFICATIONS =====================
+    function notify(msg){
+      if('Notification' in window){
+        if(Notification.permission==='granted'){ new Notification('AI LMS', { body: msg }); }
+        else alert(msg);
+      } else { alert(msg); }
+    }
+    function requestNoti(){
+      if(!('Notification' in window)){ alert('Notifications not supported in this browser.'); return; }
+      Notification.requestPermission().then(res=>{
+        if(res==='granted') notify('Notifications enabled!');
+        else alert('Permission denied.');
+      });
+    }
+    document.getElementById('enableNotiBtn').addEventListener('click', requestNoti);
+    document.getElementById('enableNotiBtnMobile').addEventListener('click', requestNoti);
+    document.querySelectorAll('.notiBtn').forEach(btn=>btn.addEventListener('click', ()=> notify(btn.dataset.noti)));
+  </script>
+  <style>
+  /* Prevent horizontal scrolling on mobile */
+  html, body {
+    overflow-x: hidden; /* Hide any horizontal overflow */
+    max-width: 100vw;   /* Ensure width does not exceed viewport */
+  }
+
+  /* Optional: make sure all images and elements fit */
+  img, iframe, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Optional: fix any flex/grid overflowing */
+  * {
+    box-sizing: border-box;
+  }
+</style>
+<!-- Professional Footer -->
+<footer style="background:#111; color:#fff; padding:40px 20px;">
+  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px; justify-content:space-between;">
+    
+    <!-- Logo & Description -->
+    <div style="flex:1 1 250px; min-width:200px;">
+      <div style="display:flex; align-items:center; margin-bottom:10px;">
+        <img src="lms-letter-logo-design-on-260nw-2193621453.webp" 
+             alt="AI-LMS Logo" 
+             style="width:40px; height:40px; margin-right:10px; object-fit:contain;">
+        <h2 style="font-size:1.2rem; font-weight:bold; margin:0;">AI-LMS</h2>
+      </div>
+      <p style="color:#aaa; font-size:0.9rem;">Smart, AI-powered Learning Management System helping students and instructors achieve more.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Quick Links</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#home" style="color:#aaa; text-decoration:none;">Home</a></li>
+        <li><a href="#courses" style="color:#aaa; text-decoration:none;">Courses</a></li>
+        <li><a href="#classes" style="color:#aaa; text-decoration:none;">Classes</a></li>
+        <li><a href="#payment" style="color:#aaa; text-decoration:none;">Payment & Subscription</a></li>
+        <li><a href="#reports" style="color:#aaa; text-decoration:none;">Reports</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Resources</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Blog</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Help Center</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Privacy Policy</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Social & Newsletter -->
+    <div style="flex:1 1 200px; min-width:200px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Connect With Us</h3>
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <a href="#" style="color:#aaa; font-size:1.2rem;">FB</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">TW</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">LI</a>
+      </div>
+      <p style="font-size:0.85rem; color:#aaa;">Subscribe to our newsletter for latest updates.</p>
+      <input type="email" placeholder="Email address" style="width:100%; padding:8px; margin-top:5px; border-radius:4px; border:none;">
+      <button style="margin-top:8px; width:100%; padding:8px; background:#ffcc00; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Subscribe</button>
+    </div>
+
+  </div>
+  <div style="text-align:center; margin-top:30px; font-size:0.8rem; color:#777;">
+    &copy; 2025 AI-LMS. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMS Authentication</title>
+  
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #1a2a6c, #b21f1f, #fdbb2d, #0f2027);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      font-family: 'Poppins', sans-serif;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      position: relative;
+      box-shadow: 0px 0px 30px rgba(0,0,0,0.3);
+    }
+
+    .auth-box::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 20px;
+      background: linear-gradient(270deg, #ff00cc, #3333ff, #00ffcc, #ff9933);
+      background-size: 600% 600%;
+      z-index: -1;
+      animation: glowing 6s linear infinite;
+    }
+
+    @keyframes glowing {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .auth-title {
+      text-align: center;
+      font-size: 1.9rem;
+      color: #fff;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .form-control, .form-select {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .btn-custom {
+      background: linear-gradient(90deg, #ff00cc, #3333ff);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      width: 100%;
+      padding: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-custom:hover {
+      transform: scale(1.05);
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #00ffcc;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    label {
+      color: #eee;
+      font-size: 0.9rem;
+    }
+
+    .profile-preview {
+      display: block;
+      margin: 10px auto;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00ffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-box">
+    <h2 class="auth-title">🔐 LMS Authentication</h2>
+
+    <!-- Tabs -->
+    <ul class="nav nav-pills mb-3 justify-content-center" id="auth-tabs">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login">Login</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#signup">Signup</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#reset">Reset</button></li>
+    </ul>
+
+    <!-- Forms -->
+    <div class="tab-content">
+      <!-- Login -->
+      <div class="tab-pane fade show active" id="login">
+        <form id="loginForm">
+          <input type="email" class="form-control mb-3" placeholder="Email" id="loginEmail" required>
+          <input type="password" class="form-control mb-3" placeholder="Password" id="loginPassword" required>
+          <select class="form-select mb-3" id="loginRole" required>
+            <option disabled selected>Select Role</option>
+            <option>Super Admin</option>
+            <option>Instructor</option>
+            <option>Student</option>
+            <option>Parent</option>
+          </select>
+          <button type="submit" class="btn-custom">Login</button>
+          <span class="link" data-bs-toggle="pill" data-bs-target="#reset">Forgot Password?</span>
+        </form>
+      </div>
+
+     <!-- Signup -->
+<div class="tab-pane fade" id="signup">
+  <form id="signupForm">
+    <input type="text" class="form-control mb-3" placeholder="Full Name" id="signupName" required>
+    <input type="email" class="form-control mb-3" placeholder="Email" id="signupEmail" required>
+    <input type="password" class="form-control mb-3" placeholder="Password" id="signupPassword" required>
+    <select class="form-select mb-3" id="signupRole" required>
+      <option disabled selected>Select Role</option>
+      <option>Super Admin</option>
+      <option>Instructor</option>
+      <option>Student</option>
+      <option>Parent</option>
+    </select>
+    <label>Upload Profile Picture:</label>
+    <input type="file" class="form-control mb-3" id="signupProfile" accept="image/*">
+    <img id="profilePreview" class="profile-preview d-none" />
+    <button type="submit" class="btn-custom">Signup</button>
+  </form>
+</div>
+
+
+      <!-- Reset -->
+      <div class="tab-pane fade" id="reset">
+        <form id="resetForm">
+          <input type="email" class="form-control mb-3" placeholder="Enter your email" id="resetEmail" required>
+          <button type="submit" class="btn-custom">Send OTP</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <div class="mt-3 text-center">
+      <button id="logoutBtn" class="btn btn-danger w-100 d-none">Logout</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // LocalStorage-based Authentication
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+    const resetForm = document.getElementById("resetForm");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const profilePreview = document.getElementById("profilePreview");
+    const signupProfile = document.getElementById("signupProfile");
+
+    // Profile Preview
+    signupProfile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profilePreview.src = event.target.result;
+          profilePreview.classList.remove("d-none");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Signup
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const user = {
+        name: document.getElementById("signupName").value,
+        email: document.getElementById("signupEmail").value,
+        password: document.getElementById("signupPassword").value,
+        role: document.getElementById("signupRole").value,
+        profile: profilePreview.src || ""
+      };
+      users.push(user);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("✅ Signup successful! Please login.");
+      signupForm.reset();
+      profilePreview.classList.add("d-none");
+    });
+
+    // Login
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+  const role = document.getElementById("loginRole").value;
+  const user = users.find(u => u.email === email && u.password === password && u.role === role);
+
+  if (user) {
+    currentUser = user;
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    alert(`🎉 Welcome ${user.name}! Redirecting to Home Page...`);
+    window.location.href = "home.html"; // ✅ Redirect to home
+  } else {
+    alert("❌ Invalid credentials!");
+  }
+});
+
+
+    // Reset Password
+    resetForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("resetEmail").value;
+      const user = users.find(u => u.email === email);
+      if (user) {
+        alert("📩 OTP has been sent to your email (demo).");
+      } else {
+        alert("❌ Email not found!");
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("currentUser");
+      currentUser = null;
+      logoutBtn.classList.add("d-none");
+      alert("👋 Logged out successfully!");
+    });
+
+    // Show logout if already logged in
+    if (currentUser) {
+      logoutBtn.classList.remove("d-none");
+    }
+  </script>
+</body>
+</html>

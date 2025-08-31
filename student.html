@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduTrack — Courses, Payments & Invoices</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{--accent:#0d6efd}
+    body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,#f6fbff 0%,#ffffff 100%)}
+    .navbar {
+    background-color: #343a40 !important; /* dark grey background */
+}
+.navbar-brand {
+    font-weight: 700;
+    color: #fff !important;
+}
+.nav-link {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+.nav-link:hover {
+    color: #ffc107 !important; /* optional hover effect */
+}
+
+    .hero{padding:70px 0}
+    .course-card{transition:transform .25s, box-shadow .25s}
+    .course-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(13,110,253,0.12)}
+    .tag-paid{background:#ffecec;color:#c0392b;padding:4px 8px;border-radius:6px;font-weight:700}
+    .tag-free{background:#e9fff2;color:#0b9a57;padding:4px 8px;border-radius:6px;font-weight:700}
+    footer{padding:30px 0;background:#0a58ca;color:#fff;text-align:center}
+    @media (max-width:576px){ .hero{padding:40px 0} }
+  </style>
+</head>
+<body>
+
+
+
+<<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <!-- Brand / Logo -->
+    <a class="navbar-brand" href="#">
+   
+      LMS
+    </a>
+
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="home.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="course.html">Courses</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="classes.html">Classes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="student.html">Payment & Subscription</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="report.html">Reports</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Optional: Highlight current page in yellow -->
+<script>
+  const currentPage = window.location.pathname.split("/").pop();
+  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+  navLinks.forEach(link => {
+    if(link.getAttribute('href') === currentPage){
+      link.classList.add('text-warning'); // Bootstrap yellow text
+    }
+  });
+</script>
+
+
+
+
+<header class="hero text-center position-relative" data-aos="fade-up">
+  <!-- Hero Cover Image -->
+  <img src="360_F_460233735_3q7EPRIRdlLIQZYK2ucez8QY8PC53bWA.jpg" 
+       alt="Online Learning Hero Image" 
+       class="hero-img rounded shadow" 
+       data-aos="zoom-in" 
+       data-aos-delay="200">
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    text-align: center;
+    background-color: #fff;
+    overflow: hidden;
+    padding-top: 60px; /* more space to separate from menu */
+    padding-bottom: 20px; /* optional bottom spacing */
+  }
+
+  .hero-img {
+    width: 100%;       /* full width */
+    max-height: 400px; /* desktop height */
+    height: auto;      /* maintain aspect ratio */
+    object-fit: cover; /* crop if necessary */
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Responsive adjustments for tablets */
+  @media (max-width: 992px) {
+    .hero {
+      padding-top: 50px;
+    }
+    .hero-img {
+      max-height: 350px;
+    }
+  }
+
+  /* Responsive adjustments for mobile */
+  @media (max-width: 576px) {
+    .hero {
+      padding-top: 40px;
+    }
+    .hero-img {
+      max-height: 250px;
+    }
+  }
+</style>
+
+
+<main class="container my-5">
+  <!-- Courses -->
+  <section id="courses" class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 data-aos="fade-right">Courses</h2>
+      <div>
+        <select id="courseFilter" class="form-select form-select-sm">
+          <option value="all">All</option>
+          <option value="free">Free only</option>
+          <option value="paid">Paid only</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="coursesGrid" class="row g-4">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- Subscriptions -->
+  <section id="subscriptions" class="mb-5" data-aos="fade-up">
+    <h2 class="mb-3">Subscription Plans</h2>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="zoom-in">
+        <div class="card p-3">
+          <h5>Monthly</h5>
+          <p class="h3">$9.99</p>
+          <p class="text-muted">Billed monthly. Access to all free courses and discounts on paid courses.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary subscribeBtn" data-type="monthly" data-price="9.99">Subscribe</button>
+            <button class="btn btn-outline-secondary" data-type="monthly" id="sub-paypal-month">PayPal</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="zoom-in">
+        <div class="card p-3">
+          <h5>Yearly</h5>
+          <p class="h3">$99.99</p>
+          <p class="text-muted">Best value — billed yearly.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary subscribeBtn" data-type="yearly" data-price="99.99">Subscribe</button>
+            <button class="btn btn-outline-secondary" data-type="yearly" id="sub-paypal-year">PayPal</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="zoom-in">
+        <div class="card p-3">
+          <h5>One-time Lifetime</h5>
+          <p class="h3">$249.99</p>
+          <p class="text-muted">One payment, lifetime access to everything.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary subscribeBtn" data-type="lifetime" data-price="249.99">Buy</button>
+            <button class="btn btn-outline-secondary" data-type="lifetime" id="sub-paypal-life">PayPal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REPLACE THIS Progress Section WITH THE BLOCK BELOW ===== -->
+<section id="progress" class="py-5 container" data-aos="fade-up">
+  <h2 class="text-center mb-4">Track Progress — Completed / Pending</h2>
+
+  <div class="row g-4">
+    <!-- Left: selection + lecture list -->
+    <div class="col-lg-6">
+      <div class="card p-3">
+        <div class="d-flex align-items-center mb-3">
+          <label class="me-2 mb-0 fw-semibold">Course:</label>
+          <select id="progressCourseSelect" class="form-select w-100"></select>
+        </div>
+
+        <div id="lecturesContainer" class="mb-3">
+          <!-- Lecture list inserted here -->
+        </div>
+
+        <div class="d-flex gap-2">
+          <button id="completeNextBtn" class="btn btn-success">Complete Next Lecture</button>
+          <button id="resetProgressBtn" class="btn btn-outline-danger">Reset Progress</button>
+          <button id="genCertBtn" class="btn btn-warning ms-auto" style="display:none">Generate Certificate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: stats + chart -->
+    <div class="col-lg-6">
+      <div class="card p-3 text-center">
+        <h5>Progress Summary</h5>
+        <div class="my-3">
+          <div class="progress" style="height:20px;">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width:0%">0%</div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-around my-3">
+          <div>
+            <div class="h4" id="completedCount">0</div>
+            <div class="text-muted">Completed</div>
+          </div>
+          <div>
+            <div class="h4" id="pendingCount">0</div>
+            <div class="text-muted">Pending</div>
+          </div>
+          <div>
+            <div class="h4" id="totalCount">0</div>
+            <div class="text-muted">Total Lectures</div>
+          </div>
+        </div>
+
+        <canvas id="progressChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// --- Progress module (paste into page) ---
+// Requires: Chart.js and jsPDF already loaded on page
+(() => {
+  const ENROLL_KEY = 'edu_enrollments_v1'; // must match your app if used elsewhere
+
+  // Utility: load/save enrollments state (object keyed by courseId)
+  function loadEnrollments() { try { return JSON.parse(localStorage.getItem(ENROLL_KEY) || '{}'); } catch(e){ return {}; } }
+  function saveEnrollments(v){ localStorage.setItem(ENROLL_KEY, JSON.stringify(v)); }
+
+  // Demo courses fallback (if no enrollments present)
+  const demoCourses = [
+    { id: 'c1', title: 'JavaScript Basics', lectures: 8, paid: false },
+    { id: 'c2', title: 'Web Development Pro', lectures: 12, paid: true },
+    { id: 'c3', title: 'Business Management', lectures: 10, paid: true }
+  ];
+
+  // Ensure enrollments exist (if not, create demo enrollment entries)
+  function ensureDemoEnrollments() {
+    const enrolls = loadEnrollments();
+    if (Object.keys(enrolls).length === 0) {
+      demoCourses.forEach(c => {
+        enrolls[c.id] = {
+          courseId: c.id,
+          title: c.title,
+          lectures: c.lectures,
+          completed: 0,
+          paid: c.paid,
+          enrolledAt: Date.now()
+        };
+      });
+      saveEnrollments(enrolls);
+    }
+    return enrolls;
+  }
+
+  // DOM refs
+  const select = document.getElementById('progressCourseSelect');
+  const lecturesContainer = document.getElementById('lecturesContainer');
+  const progressBar = document.getElementById('progressBar');
+  const completedCountEl = document.getElementById('completedCount');
+  const pendingCountEl = document.getElementById('pendingCount');
+  const totalCountEl = document.getElementById('totalCount');
+  const completeNextBtn = document.getElementById('completeNextBtn');
+  const resetBtn = document.getElementById('resetProgressBtn');
+  const genCertBtn = document.getElementById('genCertBtn');
+  const chartCtx = document.getElementById('progressChart').getContext('2d');
+
+  // Chart.js donut
+  let chart = null;
+  function initChart(completed = 0, pending = 0) {
+    if (chart) { chart.data.datasets[0].data = [completed, pending]; chart.update(); return; }
+    chart = new Chart(chartCtx, {
+      type: 'doughnut',
+      data: { labels: ['Completed','Pending'], datasets: [{ data: [completed,pending], backgroundColor: ['#28a745','#ffc107'] }] },
+      options: { cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+
+  // Build course select options
+  function populateCourseSelect() {
+    const enrolls = loadEnrollments();
+    select.innerHTML = '';
+    Object.values(enrolls).forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.courseId;
+      opt.textContent = `${e.title} ${e.paid? '(Paid)':''}`;
+      select.appendChild(opt);
+    });
+  }
+
+  // Render lectures list for selected course
+  function renderLectures(courseId) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) { lecturesContainer.innerHTML = '<p class="text-muted">No course found.</p>'; return; }
+
+    const total = e.lectures;
+    const completed = e.completed || 0;
+    lecturesContainer.innerHTML = '';
+
+    // list of lectures with checkboxes
+    const ul = document.createElement('div');
+    ul.className = 'list-group';
+    for (let i=1;i<=total;i++){
+      const checked = i <= completed;
+      const item = document.createElement('label');
+      item.className = 'list-group-item d-flex align-items-center justify-content-between';
+      item.innerHTML = `
+        <div><input type="checkbox" ${checked ? 'checked' : ''} data-lecture="${i}" class="me-2 lecture-checkbox"> Lecture ${i}</div>
+        <small class="text-muted">${checked? 'Done' : 'Pending'}</small>
+      `;
+      ul.appendChild(item);
+    }
+    lecturesContainer.appendChild(ul);
+
+    // update counts + bar + chart + buttons state
+    updateSummary(courseId);
+    // attach handlers to checkboxes
+    lecturesContainer.querySelectorAll('.lecture-checkbox').forEach(cb=>{
+      cb.addEventListener('change', (ev)=>{
+        const idx = parseInt(ev.target.dataset.lecture);
+        setCompletedLectures(courseId, idx, ev.target.checked);
+      });
+    });
+  }
+
+  // Set completed count based on a checkbox toggle:
+  // if checkbox for lecture N checked -> completed = max(current, N)
+  // if unchecked -> completed = N-1 (if N was <= current)
+  function setCompletedLectures(courseId, lectureNumber, checked) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) return;
+    if (checked) {
+      e.completed = Math.max(e.completed || 0, lectureNumber);
+    } else {
+      // unchecking reduces completed if the unchecked lecture was within completed range
+      if ((e.completed || 0) >= lectureNumber) e.completed = lectureNumber - 1;
+    }
+    saveEnrollments(enrolls);
+    renderLectures(courseId);
+  }
+
+  // Complete next lecture (helper button)
+  function completeNextLecture(courseId) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) return;
+    if (e.completed >= e.lectures) return;
+    e.completed = (e.completed || 0) + 1;
+    saveEnrollments(enrolls);
+    renderLectures(courseId);
+  }
+
+  // Reset progress
+  function resetProgress(courseId) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) return;
+    if (!confirm('Reset progress for ' + e.title + '?')) return;
+    e.completed = 0;
+    saveEnrollments(enrolls);
+    renderLectures(courseId);
+  }
+
+  // Update summary panel and chart for current course
+  function updateSummary(courseId) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) return;
+    const total = e.lectures;
+    const completed = e.completed || 0;
+    const pending = Math.max(0, total - completed);
+    const pct = Math.round((completed / total) * 100) || 0;
+
+    completedCountEl.innerText = completed;
+    pendingCountEl.innerText = pending;
+    totalCountEl.innerText = total;
+    progressBar.style.width = pct + '%';
+    progressBar.innerText = pct + '%';
+
+    // chart
+    initChart(completed, pending);
+
+    // certificate button visible only when complete
+    genCertBtn.style.display = (completed >= total) ? 'inline-block' : 'none';
+  }
+
+  // Certificate generation (jsPDF)
+  function generateCertificateFor(courseId) {
+    const enrolls = loadEnrollments();
+    const e = enrolls[courseId];
+    if (!e) return alert('No course data.');
+    const certId = 'CERT-' + Math.random().toString(36).slice(2,9).toUpperCase();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({orientation:'landscape', unit:'pt', format:'a4'});
+    pdf.setFontSize(28); pdf.text('Certificate of Completion', 60, 80);
+    pdf.setFontSize(16); pdf.text(`This certifies that`, 60, 120);
+    pdf.setFontSize(20); pdf.text(`Student`, 60, 150);
+    pdf.setFontSize(16); pdf.text(`has successfully completed the course:`, 60, 190);
+    pdf.setFontSize(18); pdf.text(e.title, 60, 220);
+    pdf.setFontSize(12);
+    pdf.text(`Certificate ID: ${certId}`, 60, 260);
+    pdf.text(`Date: ${new Date().toLocaleDateString()}`, 60, 280);
+    pdf.save(`${e.title.replace(/\s+/g,'_')}_certificate_${certId}.pdf`);
+    // store certificate record in localStorage (optional)
+    const certs = JSON.parse(localStorage.getItem('edu_certs_v1') || '[]');
+    certs.push({id: certId, courseId: courseId, issuedAt: Date.now()});
+    localStorage.setItem('edu_certs_v1', JSON.stringify(certs));
+  }
+
+  // Wire up controls
+  select.addEventListener('change', ()=> {
+    const cid = select.value;
+    renderLectures(cid);
+  });
+  completeNextBtn.addEventListener('click', ()=> {
+    const cid = select.value;
+    completeNextLecture(cid);
+  });
+  resetBtn.addEventListener('click', ()=> {
+    const cid = select.value;
+    resetProgress(cid);
+  });
+  genCertBtn.addEventListener('click', ()=> {
+    const cid = select.value;
+    generateCertificateFor(cid);
+  });
+
+  // Initialize module
+  function initProgressModule() {
+    ensureDemoEnrollments();
+    populateCourseSelect();
+    // select first course
+    if (select.options.length > 0) select.selectedIndex = 0;
+    const first = select.value;
+    if (first) renderLectures(first);
+  }
+
+  initProgressModule();
+
+})(); // end IIFE
+</script>
+
+
+<!-- Certificates Section -->
+<section id="cert" class="mb-5 text-center" data-aos="fade-up">
+  <div class="d-flex justify-content-center align-items-center gap-3">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+         alt="Certificate Logo" width="70" height="70">
+    <h2 class="m-0">Certificates</h2>
+  </div>
+</section>
+
+
+  <div class="p-3 border rounded bg-light">
+    <form id="certificateForm" class="d-flex flex-column gap-2">
+      <input type="text" id="studentName" class="form-control" placeholder="Enter Student Name" required>
+      <input type="text" id="courseName" class="form-control" placeholder="Enter Course Name" required>
+      <button type="submit" class="btn btn-success">Generate Certificate</button>
+    </form>
+  </div>
+</section>
+
+
+<!-- jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  function generateUniqueID() {
+    return 'CERT-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+  }
+
+  async function generateCertificate(studentName, courseName) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let certID = generateUniqueID();
+
+    // Load Logo
+    const logoUrl = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+    const logo = await fetch(logoUrl).then(r => r.blob()).then(b => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(b);
+      });
+    });
+    doc.addImage(logo, "PNG", 85, 10, 40, 40);
+
+    // Certificate Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(24);
+    doc.text("Certificate of Completion", 105, 65, { align: "center" });
+
+    // Student Name
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "normal");
+    doc.text("This is proudly presented to", 105, 85, { align: "center" });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text(studentName, 105, 100, { align: "center" });
+
+    // Course
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.text(`for successfully completing the course`, 105, 115, { align: "center" });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text(courseName, 105, 130, { align: "center" });
+
+    // Certificate ID
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Certificate ID: ${certID}`, 105, 150, { align: "center" });
+
+    doc.setFontSize(10);
+    doc.text("Generated Automatically", 105, 160, { align: "center" });
+
+    // Save as PDF
+    doc.save(`${studentName}_${courseName}_Certificate.pdf`);
+  }
+
+  // Handle Form Submit
+  document.getElementById("certificateForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    let studentName = document.getElementById("studentName").value.trim();
+    let courseName = document.getElementById("courseName").value.trim();
+
+    if(studentName && courseName){
+      generateCertificate(studentName, courseName);
+    } else {
+      alert("Please enter both Student Name and Course Name!");
+    }
+  });
+</script>
+
+
+<!-- Compact Students & Certificates Section -->
+<section id="certificates" class="py-4" style="background: #f8f9fa;" data-aos="fade-up">
+  <div class="container text-center">
+    <h2 class="mb-3" data-aos="fade-down" data-aos-delay="100">Our Achievements</h2>
+    <p class="mb-4 text-muted" data-aos="fade-up" data-aos-delay="200">Celebrating the success of our students and the excellence of our institute.</p>
+    
+    <div class="d-flex justify-content-center gap-4 flex-wrap">
+      <div class="stat-card text-center p-3 bg-white rounded shadow-sm" data-aos="zoom-in" data-aos-delay="300">
+        <h3 class="display-5 fw-bold mb-1">500</h3>
+        <p class="mb-0">Students Certified</p>
+      </div>
+      <div class="stat-card text-center p-3 bg-white rounded shadow-sm" data-aos="zoom-in" data-aos-delay="400">
+        <h3 class="display-5 fw-bold mb-1">120</h3>
+        <p class="mb-0">Courses Completed</p>
+      </div>
+      <div class="stat-card text-center p-3 bg-white rounded shadow-sm" data-aos="zoom-in" data-aos-delay="500">
+        <h3 class="display-5 fw-bold mb-1">50</h3>
+        <p class="mb-0">Expert Instructors</p>
+      </div>
+      <div class="stat-card text-center p-3 bg-white rounded shadow-sm" data-aos="zoom-in" data-aos-delay="600">
+        <h3 class="display-5 fw-bold mb-1">1000+</h3>
+        <p class="mb-0">Certificates Issued</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer style="background-color: #343a40; color: #f1f1f1; padding: 20px 0;">
+  <div class="container text-center">
+    <div><span id="year"></span> EduTrack</div>
+  </div>
+</footer>
+
+<script>
+  // Automatically set current year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+
+<!-- Modals -->
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Checkout</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="checkoutBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- PayPal SDK (sandbox 'sb' client id) -->
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+
+<script>
+// --- Initialize AOS and year ---
+AOS.init({duration:700, once:true});
+document.getElementById('year').innerText = new Date().getFullYear();
+
+// --- Sample data ---
+const courses = [
+  {id:'c1',title:'Full Stack Web Development',type:'paid',price:79.99,img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200'},
+  {id:'c2',title:'Intro to Python',type:'free',price:0,img:'intro-to-python.avif'},
+  {id:'c3',title:'UI/UX Design Basics',type:'paid',price:39.99,img:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200'},
+  {id:'c4',title:'Digital Marketing 101',type:'free',price:0,img:'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=1200'}
+];
+
+// LocalStorage keys
+const ENROLL_KEY = 'edu_enrollments_v1';
+const INVOICE_KEY = 'edu_invoices_v1';
+const CERT_KEY = 'edu_certs_v1';
+
+function loadState(key){ return JSON.parse(localStorage.getItem(key) || '{}'); }
+function saveState(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+// Render courses
+const grid = document.getElementById('coursesGrid');
+function renderCourses(filter='all'){
+  grid.innerHTML = '';
+  const enrolls = loadState(ENROLL_KEY);
+  courses.forEach(c=>{
+    if(filter!=='all' && c.type!==filter) return;
+    const enrolled = enrolls[c.id];
+    const col = document.createElement('div'); col.className='col-sm-6 col-lg-3';
+    col.innerHTML = `
+      <div class="card course-card h-100">
+        <img src="${c.img}" class="card-img-top" style="height:160px;object-fit:cover" alt="${c.title}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">${c.title}</h5>
+          <div class="mb-2">${c.type==='paid'? '<span class="tag-paid">Paid</span>':'<span class="tag-free">Free</span>'}</div>
+          <p class="text-muted small">${c.type==='paid' ? '$'+c.price : 'Free course'}</p>
+          <div class="mt-auto d-flex gap-2">
+            <button class="btn btn-sm btn-primary enrollBtn" data-id="${c.id}">${enrolled? 'Go to course' : 'Enroll'}</button>
+            <button class="btn btn-sm btn-outline-secondary detailsBtn" data-id="${c.id}">Details</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(col);
+  });
+}
+
+renderCourses();
+document.getElementById('courseFilter').addEventListener('change',(e)=> renderCourses(e.target.value));
+
+// Enrollment flow
+function enrollFree(courseId){
+  const enrolls = loadState(ENROLL_KEY);
+  if(enrolls[courseId]) return;
+  const course = courses.find(c=>c.id===courseId);
+  enrolls[courseId] = {courseId, lectures: 8 + (course.type==='paid'?4:0), completed:0, paid:false, enrolledAt: Date.now()};
+  saveState(ENROLL_KEY, enrolls); updateUI(); alert('Enrolled in '+course.title);
+}
+
+// PayPal payment for a course (client-side sandbox)
+async function payWithPayPal(course){
+  // Show modal with PayPal button
+  const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+  const body = document.getElementById('checkoutBody');
+  body.innerHTML = `<p>Pay <strong>$${course.price}</strong> for <strong>${course.title}</strong> using PayPal (Sandbox)</p><div id="paypal-buttons"></div>`;
+  checkoutModal.show();
+
+  // Render PayPal Buttons
+  paypal.Buttons({
+    createOrder: function(data, actions){
+      return actions.order.create({purchase_units:[{amount:{value:course.price.toString()}, description:course.title}]});
+    },
+    onApprove: function(data, actions){
+      return actions.order.capture().then(function(details){
+        // Payment successful -> enroll student & generate invoice
+        finalizePaidEnrollment(course.id, 'paypal', details.id || data.orderID, course.price);
+        checkoutModal.hide();
+        alert('Payment completed. You are enrolled. Invoice downloaded.');
+      });
+    },
+    onError: function(err){ alert('PayPal error: '+err); }
+  }).render('#paypal-buttons');
+}
+
+// Simulated Stripe flow (client-only demo)
+function payWithStripeSim(course){
+  const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+  const body = document.getElementById('checkoutBody');
+  body.innerHTML = `<p>Simulated Stripe Payment for <strong>$${course.price}</strong> — this is a demo (no server).</p><div class="d-flex gap-2"><button id="stripe-sim-pay" class="btn btn-primary">Simulate Payment</button> <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button></div>`;
+  checkoutModal.show();
+  document.getElementById('stripe-sim-pay').onclick = ()=>{
+    // Simulate success response
+    setTimeout(()=>{
+      finalizePaidEnrollment(course.id, 'stripe_sim', 'SIM-'+Date.now(), course.price);
+      checkoutModal.hide();
+      alert('Simulated Stripe payment success — enrolled & invoice generated.');
+    },800);
+  };
+}
+
+// Finalize paid enrollment: store enrollment, create invoice, save invoice PDF
+function finalizePaidEnrollment(courseId, method, txnId, amount){
+  const enrolls = loadState(ENROLL_KEY);
+  const course = courses.find(c=>c.id===courseId);
+  enrolls[courseId] = {courseId, lectures: 8 + (course.type==='paid'?4:0), completed:0, paid:true, paidVia:method, txnId, amount, enrolledAt: Date.now()};
+  saveState(ENROLL_KEY, enrolls);
+
+  // create invoice record
+  const invoices = JSON.parse(localStorage.getItem(INVOICE_KEY) || '[]');
+  const inv = {id: generateInvoiceId(), courseId, courseTitle: course.title, amount, method, txnId, issuedAt: Date.now()};
+  invoices.push(inv); localStorage.setItem(INVOICE_KEY, JSON.stringify(invoices));
+  makeInvoicePDF(inv);
+  updateUI();
+}
+
+// Generate unique invoice id
+function generateInvoiceId(){ return 'INV-' + Math.random().toString(36).slice(2,9).toUpperCase(); }
+
+// Invoice PDF
+async function makeInvoicePDF(inv){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'pt', format:'a4'});
+  pdf.setFontSize(18); pdf.text('Invoice', 40, 60);
+  pdf.setFontSize(12);
+  pdf.text(`Invoice ID: ${inv.id}`, 40, 90);
+  pdf.text(`Course: ${inv.courseTitle}`, 40, 110);
+  pdf.text(`Amount: $${inv.amount}`, 40, 130);
+  pdf.text(`Payment Method: ${inv.method}`, 40, 150);
+  pdf.text(`Transaction ID: ${inv.txnId}`, 40, 170);
+  pdf.text(`Date: ${new Date(inv.issuedAt).toLocaleString()}`, 40, 190);
+  pdf.save(`${inv.id}_${inv.courseTitle.replace(/\s+/g,'_')}.pdf`);
+}
+
+// Certificate generator
+async function makeCertificate(courseId){
+  const certs = JSON.parse(localStorage.getItem(CERT_KEY) || '[]');
+  const course = courses.find(c=>c.id===courseId);
+  const certId = 'CERT-' + Math.random().toString(36).slice(2,9).toUpperCase();
+
+  // build DOM for certificate
+  const el = document.createElement('div'); el.style.width='1200px'; el.style.padding='60px'; el.style.background='#fff';
+  el.innerHTML = `<div style="text-align:center;border:6px solid var(--accent);padding:30px;border-radius:12px">
+    <h1 style="color:var(--accent)">Certificate of Completion</h1>
+    <p>This is to certify that</p>
+    <h2>Student</h2>
+    <p>has completed the course</p>
+    <h3>${course.title}</h3>
+    <p>Certificate ID: <strong>${certId}</strong></p>
+    <p>Issued: ${new Date().toLocaleDateString()}</p>
+  </div>`;
+  document.body.appendChild(el);
+  const canvas = await html2canvas(el, {scale:1.6});
+  const img = canvas.toDataURL('image/png');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({orientation:'landscape', unit:'px', format:[canvas.width, canvas.height]});
+  pdf.addImage(img,'PNG',0,0,canvas.width,canvas.height);
+  pdf.save(`${course.title.replace(/\s+/g,'_')}_certificate_${certId}.pdf`);
+  document.body.removeChild(el);
+
+  certs.push({id:certId,courseId,issuedAt:Date.now()}); localStorage.setItem(CERT_KEY, JSON.stringify(certs));
+  updateUI();
+}
+
+// UI updates
+let chartInstance = null;
+function updateUI(){
+  // enrollments list
+  const enrolls = loadState(ENROLL_KEY);
+  const list = document.getElementById('enrollmentList'); list.innerHTML='';
+  let totalCompleted=0, totalLectures=0;
+  for(const k in enrolls){
+    const e = enrolls[k];
+    const course = courses.find(c=>c.id===k) || {title:k};
+    totalCompleted += e.completed; totalLectures += e.lectures;
+    const item = document.createElement('div'); item.className='list-group-item d-flex justify-content-between align-items-center';
+    item.innerHTML = `<div><strong>${course.title}</strong><br><small class="text-muted">${e.completed}/${e.lectures} lectures</small></div><div class="d-flex gap-2 align-items-center">${e.completed>=e.lectures? '<button class="btn btn-sm btn-warning genCert" data-id="'+k+'">Certificate</button>':''}<button class="btn btn-sm btn-outline-secondary viewCourse" data-id="${k}">View</button></div>`;
+    list.appendChild(item);
+  }
+  // update chart
+  const completed = totalCompleted; const pending = Math.max(0,totalLectures-totalCompleted);
+  const ctx = document.getElementById('progressChart');
+  if(chartInstance){ chartInstance.data.datasets[0].data = [completed,pending]; chartInstance.update(); }
+  else{ chartInstance = new Chart(ctx,{type:'doughnut',data:{labels:['Completed','Pending'],datasets:[{data:[completed,pending],backgroundColor:['#0d6efd','#e9eefb']}]},options:{cutout:'65%',plugins:{legend:{position:'bottom'}}}}); }
+
+  // certificates area
+  const certs = JSON.parse(localStorage.getItem(CERT_KEY) || '[]');
+  const cArea = document.getElementById('certificatesArea'); cArea.innerHTML='';
+  if(certs.length===0) cArea.innerHTML='<small class="text-muted">No certificates issued yet.</small>';
+  else certs.slice().reverse().forEach(c=>{ const b=document.createElement('button'); b.className='btn btn-outline-success btn-sm'; b.innerText=c.id; cArea.appendChild(b); });
+
+  // invoices
+  const invoices = JSON.parse(localStorage.getItem(INVOICE_KEY) || '[]');
+  const invList = document.getElementById('invoiceList'); invList.innerHTML='';
+  if(invoices.length===0) invList.innerHTML='<small class="text-muted">No invoices yet.</small>';
+  else invoices.slice().reverse().forEach(i=>{ const b=document.createElement('button'); b.className='btn btn-outline-primary btn-sm'; b.innerText=i.id; b.title = `${i.courseTitle} • $${i.amount}`; invList.appendChild(b); });
+}
+
+// Event delegation for course buttons
+document.getElementById('coursesGrid').addEventListener('click', (e)=>{
+  const t = e.target;
+  if(t.classList.contains('enrollBtn')){
+    const id=t.dataset.id; const course = courses.find(c=>c.id===id);
+    if(course.type==='free'){ enrollFree(id); renderCourses(document.getElementById('courseFilter').value); }
+    else{
+      // present payment options modal (PayPal + Stripe-sim)
+      const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+      const body = document.getElementById('checkoutBody');
+      body.innerHTML = `<p>Pay <strong>$${course.price}</strong> for <strong>${course.title}</strong></p>
+        <div class="d-flex gap-2"><button id="pay-paypal" class="btn btn-primary">Pay with PayPal</button><button id="pay-stripe" class="btn btn-outline-primary">Pay with Stripe (Sim)</button></div>`;
+      checkoutModal.show();
+      document.getElementById('pay-paypal').onclick = ()=> payWithPayPal(course);
+      document.getElementById('pay-stripe').onclick = ()=> payWithStripeSim(course);
+    }
+  }
+  if(t.classList.contains('detailsBtn')){
+    const id = t.dataset.id; const course = courses.find(c=>c.id===id);
+    alert(course.title + '\n\n' + (course.type==='paid' ? 'Paid: $'+course.price : 'Free course') + '\n\nLectures: ' + (8 + (course.type==='paid'?4:0)));
+  }
+});
+
+// Subscription buttons
+document.querySelectorAll('.subscribeBtn').forEach(b=> b.addEventListener('click', (e)=>{
+  const type = e.target.dataset.type; const price = parseFloat(e.target.dataset.price);
+  // For simplicity, we'll use Stripe-sim flow for subscription
+  const confirmSub = confirm(`Subscribe to ${type} for $${price}? (Simulated payment)`);
+  if(!confirmSub) return;
+  // store subscription in enrollments area as a special key
+  const enrolls = loadState(ENROLL_KEY);
+  const key = 'sub_'+type;
+  enrolls[key] = {courseId:key, title: type+' subscription', paid:true, amount:price, subscribedAt:Date.now(), expiresAt: (type==='monthly'? Date.now()+30*24*60*60*1000 : (type==='yearly'? Date.now()+365*24*60*60*1000 : null))};
+  saveState(ENROLL_KEY, enrolls);
+  // invoice
+  const invoices = JSON.parse(localStorage.getItem(INVOICE_KEY) || '[]');
+  const inv = {id: generateInvoiceId(), courseId: key, courseTitle: type+' subscription', amount: price, method:'stripe_sim', txnId: 'SIM-'+Date.now(), issuedAt: Date.now()};
+  invoices.push(inv); localStorage.setItem(INVOICE_KEY, JSON.stringify(invoices));
+  makeInvoicePDF(inv);
+  updateUI();
+  alert('Subscription simulated & invoice generated.');
+}));
+
+// PayPal subscription buttons (optional per plan)
+document.getElementById('sub-paypal-month').addEventListener('click', ()=>{
+  const plan = {id:'sub_monthly', title:'Monthly Subscription', price:9.99}; payWithPayPal(plan);
+});
+document.getElementById('sub-paypal-year').addEventListener('click', ()=>{ payWithPayPal({id:'sub_yearly', title:'Yearly Subscription', price:99.99}); });
+document.getElementById('sub-paypal-life').addEventListener('click', ()=>{ payWithPayPal({id:'sub_life', title:'Lifetime Subscription', price:249.99}); });
+
+// Handle invoice/certificate & view actions from lists
+document.body.addEventListener('click',(e)=>{
+  if(e.target.classList.contains('genCert')){ makeCertificate(e.target.dataset.id); }
+  if(e.target.classList.contains('viewCourse')){ alert('Open course player (simulated).'); }
+});
+
+// On load
+(function init(){ renderCourses(); updateUI(); })();
+
+</script>
+
+  <!-- Professional Footer -->
+<footer style="background:#111; color:#fff; padding:40px 20px;">
+  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px; justify-content:space-between;">
+    
+    <!-- Logo & Description -->
+    <div style="flex:1 1 250px; min-width:200px;">
+      <div style="display:flex; align-items:center; margin-bottom:10px;">
+        <img src="lms-letter-logo-design-on-260nw-2193621453.webp" 
+             alt="AI-LMS Logo" 
+             style="width:40px; height:40px; margin-right:10px; object-fit:contain;">
+        <h2 style="font-size:1.2rem; font-weight:bold; margin:0;">AI-LMS</h2>
+      </div>
+      <p style="color:#aaa; font-size:0.9rem;">Smart, AI-powered Learning Management System helping students and instructors achieve more.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Quick Links</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#home" style="color:#aaa; text-decoration:none;">Home</a></li>
+        <li><a href="#courses" style="color:#aaa; text-decoration:none;">Courses</a></li>
+        <li><a href="#classes" style="color:#aaa; text-decoration:none;">Classes</a></li>
+        <li><a href="#payment" style="color:#aaa; text-decoration:none;">Payment & Subscription</a></li>
+        <li><a href="#reports" style="color:#aaa; text-decoration:none;">Reports</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div style="flex:1 1 150px; min-width:150px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Resources</h3>
+      <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Blog</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Help Center</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Privacy Policy</a></li>
+        <li><a href="#" style="color:#aaa; text-decoration:none;">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Social & Newsletter -->
+    <div style="flex:1 1 200px; min-width:200px;">
+      <h3 style="font-weight:bold; font-size:0.95rem; margin-bottom:10px;">Connect With Us</h3>
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <a href="#" style="color:#aaa; font-size:1.2rem;">FB</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">TW</a>
+        <a href="#" style="color:#aaa; font-size:1.2rem;">LI</a>
+      </div>
+      <p style="font-size:0.85rem; color:#aaa;">Subscribe to our newsletter for latest updates.</p>
+      <input type="email" placeholder="Email address" style="width:100%; padding:8px; margin-top:5px; border-radius:4px; border:none;">
+      <button style="margin-top:8px; width:100%; padding:8px; background:#ffcc00; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Subscribe</button>
+    </div>
+
+  </div>
+  <div style="text-align:center; margin-top:30px; font-size:0.8rem; color:#777;">
+    &copy; 2025 AI-LMS. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

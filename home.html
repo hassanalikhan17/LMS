@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LMS Home - AI Powered</title>
+<script>
+  // Check if user is logged in
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (!currentUser) {
+    // Not logged in → redirect to login page
+    window.location.href = "login.html";
+  }
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<style>
+html, body { overflow-x: hidden; }
+#menu a { text-decoration: none; }
+</style>
+</head>
+<body class="bg-gradient-to-r from-indigo-50 via-white to-indigo-100 text-gray-800 font-sans">
+<!-- Navbar -->
+<nav class="bg-gray-800 text-white fixed w-full z-50 top-0 shadow-lg">
+  <div class="container mx-auto flex justify-between items-center p-4">
+    
+    
+   <!-- Navbar Logo + Name at left corner -->
+<div class="flex items-center justify-start">
+  <img src="lms-letter-logo-design-on-260nw-2193621453.webp" 
+       alt="AI-LMS Logo" 
+       class="w-10 h-10 mr-3 object-contain"/>
+  <h2 class="text-2xl font-bold mb-0">LMS</h2>
+</div>
+
+
+    <button id="menuBtn" class="md:hidden text-3xl">☰</button>
+    <ul id="menu" class="hidden md:flex space-x-6 md:items-center">
+      <li><a href="home.html" class="hover:text-yellow-500">Home</a></li>
+      <li><a href="course.html" class="hover:text-yellow-500">Courses</a></li>
+      <li><a href="classes.html" class="hover:text-yellow-500">Classes</a></li>
+      <li><a href="student.html" class="hover:text-yellow-500">Payment & Subscription</a></li>
+      <li><a href="report.html" class="hover:text-yellow-500">Reports</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="mt-16 bg-cover bg-center h-96 flex items-center justify-center" 
+style="background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1600&q=80');">
+  <div class="bg-black bg-opacity-50 p-10 rounded-xl text-center" data-aos="zoom-in">
+    <h2 class="text-4xl font-bold text-white">AI-Powered Learning Management System</h2>
+    <p class="text-gray-200 mt-2">Smart, engaging, analytics-driven platform for modern education</p>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-16 px-6 bg-white">
+  <h3 class="text-3xl font-bold text-center text-indigo-700 mb-10" data-aos="fade-up">Our Features</h3>
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-right">
+      <img src="https://img.icons8.com/fluency/96/artificial-intelligence.png" class="mx-auto mb-4"/>
+      <h4 class="font-bold text-lg mb-2">AI Quiz Generator</h4>
+      <p>Automatically generate quiz questions from course content using NLP, saving instructors’ time.</p>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-up">
+      <img src="76227_1680023_116475_thumbnail.jpg" class="mx-auto mb-4" style="width:96px; height:96px;"/>
+
+
+      <h4 class="font-bold text-lg mb-2">Smart Recommendations</h4>
+      <p>Our AI suggests personalized learning paths and courses for students.</p>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-left">
+      <img src="https://img.icons8.com/fluency/96/combo-chart.png" class="mx-auto mb-4"/>
+      <h4 class="font-bold text-lg mb-2">Analytics</h4>
+      <p>Track weak areas, strengths, and receive automated improvement tips.</p>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-right">
+      <img src="https://img.icons8.com/fluency/96/video-conference.png" class="mx-auto mb-4"/>
+      <h4 class="font-bold text-lg mb-2">Live Classes</h4>
+      <p>Integrated with Zoom & Google Meet for seamless online teaching.</p>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-up">
+      <img src="https://img.icons8.com/fluency/96/chat.png" class="mx-auto mb-4"/>
+      <h4 class="font-bold text-lg mb-2">Chat & Forum</h4>
+      <p>Engage in real-time discussion and Q&A forums with instructors.</p>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow hover:shadow-lg" data-aos="fade-left">
+      <img src="https://img.icons8.com/fluency/96/appointment-reminders.png" class="mx-auto mb-4"/>
+      <h4 class="font-bold text-lg mb-2">Notifications</h4>
+      <p>Stay updated with push notifications for new lessons & deadlines.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Dashboards Section -->
+<section id="dashboards" class="py-16 px-6 bg-indigo-50">
+  <h3 class="text-3xl font-bold text-center text-indigo-700 mb-10" data-aos="fade-up">Dashboards Preview</h3>
+  <div class="grid md:grid-cols-3 gap-8 text-center">
+    <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg" data-aos="flip-left">
+      <img src="https://img.icons8.com/color/96/teacher.png" class="mx-auto mb-3"/>
+      <h4 class="font-bold text-lg">Instructor Dashboard</h4>
+      <p>Earnings, students, and course ratings overview.</p>
+    </div>
+    <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg" data-aos="flip-up">
+      <img src="https://img.icons8.com/color/96/student-male.png" class="mx-auto mb-3"/>
+      <h4 class="font-bold text-lg">Student Dashboard</h4>
+      <p>Track progress, deadlines, and assignments easily.</p>
+    </div>
+    <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg" data-aos="flip-right">
+      <img src="https://img.icons8.com/color/96/admin-settings-male.png" class="mx-auto mb-3"/>
+      <h4 class="font-bold text-lg">Admin Dashboard</h4>
+      <p>Monitor revenue, active users, and course performance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-16 px-6 bg-white">
+  <h3 class="text-3xl font-bold text-center text-indigo-700 mb-10" data-aos="fade-up">What Our Users Say</h3>
+  <div class="grid md:grid-cols-2 gap-8">
+    <div class="p-6 bg-indigo-50 rounded-xl shadow" data-aos="fade-right">
+      <p class="italic">“This LMS changed the way I teach. The AI features are game-changing!”</p>
+      <h4 class="font-bold mt-4">— Sarah, Instructor</h4>
+    </div>
+    <div class="p-6 bg-indigo-50 rounded-xl shadow" data-aos="fade-left">
+      <p class="italic">“I love the recommendations and dashboards. Learning feels personalized!”</p>
+      <h4 class="font-bold mt-4">— Ali, Student</h4>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-16 px-6 text-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+  <h3 class="text-3xl font-bold mb-4" data-aos="zoom-in">Ready to Start Your Learning Journey?</h3>
+  <p class="mb-6">Join thousands of students and instructors on AI-LMS today.</p>
+  <a href="#" class="bg-yellow-500 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-yellow-600">Get Started</a>
+</section>
+
+<!-- Professional Footer -->
+<footer class="bg-gray-900 text-white py-12 px-6">
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+
+    <!-- Logo & Description -->
+    <div>
+     <!-- Navbar Logo + Title -->
+<div class="flex items-center">
+  <img src="lms-letter-logo-design-on-260nw-2193621453.webp" 
+       alt="AI-LMS Logo" 
+       class="w-8 h-8 mr-2"/>
+  <h2 class="text-2xl font-bold mb-0">AI-LMS</h2>
+</div>
+
+      <p class="text-gray-400">Smart, AI-powered Learning Management System helping students and instructors achieve more.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h3 class="font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2">
+        <li><a href="#home" class="hover:text-yellow-500 transition">Home</a></li>
+        <li><a href="#courses" class="hover:text-yellow-500 transition">Courses</a></li>
+        <li><a href="#classes" class="hover:text-yellow-500 transition">Classes</a></li>
+        <li><a href="#payment" class="hover:text-yellow-500 transition">Payment & Subscription</a></li>
+        <li><a href="#reports" class="hover:text-yellow-500 transition">Reports</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div>
+      <h3 class="font-semibold mb-4">Resources</h3>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-yellow-500 transition">Blog</a></li>
+        <li><a href="#" class="hover:text-yellow-500 transition">Help Center</a></li>
+        <li><a href="#" class="hover:text-yellow-500 transition">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-yellow-500 transition">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Social & Newsletter -->
+    <div>
+      <h3 class="font-semibold mb-4">Connect With Us</h3>
+      <div class="flex space-x-4 mb-4">
+        <!-- Facebook -->
+        <a href="#" class="hover:text-yellow-500 transition" aria-label="Facebook">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24h11.495V14.708h-3.13v-3.622h3.13V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.794.143v3.24h-1.918c-1.504 0-1.795.715-1.795 1.762v2.31h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.326V1.326C24 .593 23.407 0 22.675 0z"/>
+          </svg>
+        </a>
+        <!-- Twitter -->
+        <a href="#" class="hover:text-yellow-500 transition" aria-label="Twitter">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724 9.864 9.864 0 0 1-3.127 1.195 4.916 4.916 0 0 0-8.379 4.482A13.944 13.944 0 0 1 1.671 3.149a4.916 4.916 0 0 0 1.523 6.574 4.902 4.902 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.084 4.918 4.918 0 0 0 4.588 3.417A9.867 9.867 0 0 1 0 21.539a13.924 13.924 0 0 0 7.548 2.212c9.057 0 14.01-7.496 14.01-13.986 0-.21-.004-.423-.014-.634A10.012 10.012 0 0 0 24 4.557z"/>
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" class="hover:text-yellow-500 transition" aria-label="LinkedIn">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.025-3.037-1.851-3.037-1.853 0-2.136 1.446-2.136 2.939v5.667H9.353V9h3.414v1.561h.049c.476-.899 1.637-1.848 3.368-1.848 3.601 0 4.268 2.368 4.268 5.455v6.284zM5.337 7.433c-1.144 0-2.07-.927-2.07-2.071 0-1.143.926-2.07 2.07-2.07 1.144 0 2.071.927 2.071 2.07 0 1.144-.927 2.071-2.071 2.071zm1.777 13.019H3.559V9h3.555v11.452zM22.225 0H1.771C.792 0 0 .771 0 1.723v20.554C0 23.23.792 24 1.771 24h20.451C23.205 24 24 23.23 24 22.277V1.723C24 .771 23.205 0 22.225 0z"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Newsletter Signup -->
+      <div class="mt-4">
+        <h3 class="font-semibold mb-2">Newsletter</h3>
+        <form class="flex flex-col sm:flex-row gap-2">
+          <input type="email" placeholder="Your email" class="p-2 rounded-md text-gray-900 flex-1 focus:outline-none"/>
+          <button type="submit" class="bg-yellow-500 px-4 py-2 rounded-md hover:bg-yellow-600 font-semibold">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  menuBtn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+    menu.classList.toggle('flex');
+    menu.classList.toggle('flex-col');
+    menu.classList.toggle('absolute');
+    menu.classList.toggle('bg-gray-800');
+    menu.classList.toggle('top-16');
+    menu.classList.toggle('left-0');
+    menu.classList.toggle('w-full');
+    menu.classList.toggle('p-4');
+    menu.classList.remove('space-x-6');
+    menu.classList.add('space-y-4');
+  });
+
+  // Initialize AOS
+  AOS.init({ duration: 1000, once: true });
+</script>
+</body>
+</html>
